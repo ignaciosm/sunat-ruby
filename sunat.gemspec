@@ -1,0 +1,25 @@
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'sunat/version'
+
+Gem::Specification.new do |spec|
+  spec.name          = "sunat"
+  spec.version       = SUNAT::VERSION
+  spec.authors       = ["Sam Lown"]
+  spec.email         = ["me@samlown.com"]
+  spec.description   = %q{Generate declarations suitable for presenting to SUNAT in Peru.}
+  spec.summary       = %q{Provides a series of models that can be both serialized to JSON for later usage, and generate XML documents that can be presented to SUNAT.}
+  spec.homepage      = ""
+  spec.license       = "MIT"
+
+  spec.files         = `git ls-files`.split($/)
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths = ["lib"]
+
+  spec.add_dependency "activemodel", "~> 3.0"
+
+  spec.add_development_dependency "bundler", "~> 1.3"
+  spec.add_development_dependency "rake"
+end
