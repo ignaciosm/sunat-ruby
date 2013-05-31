@@ -32,7 +32,7 @@ module SUNAT
 
     def clone
       new = super
-      @_attributes = @_attributes.dup
+      @_attributes = @_attributes.clone
       new
     end
 
