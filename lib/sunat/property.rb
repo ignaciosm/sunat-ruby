@@ -5,7 +5,17 @@ module SUNAT
 
     def initialize(name, type)
       self.name = name.to_sym
-      self.type = type
+
+      # Always set type to base type
+      if type.is_a?(Array) && !type.first.nil?
+        @_use_casted_array = true
+        klass = type.first
+      else
+        @_use_casted_array = false
+        klass = type
+      end
+
+      self.type = klass
     end
 
     def to_s
@@ -16,16 +26,20 @@ module SUNAT
       name
     end
 
+    # Use cast method when we do not know if we may need to handle a
+    # casted array of objects.
     def cast(owner, value)
-      if type.is_a?(Array)
+      if use_casted_array?
         CastedArray.new(owner, self, value)
       else
         build(owner, value)
       end
     end
 
+    # Build a new object of the type defined by the property.
+    # Will not deal create CastedArrays!
     def build(owner, value)
-      obj = nil
+      obj   = nil
       if value.is_a?(type)
         obj = value
       else
@@ -34,6 +48,10 @@ module SUNAT
       obj.casted_by = owner if obj.respond_to?(:casted_by=)
       obj.casted_by_property = self if obj.respond_to?(:casted_by_property=)
       obj
+    end
+
+    def use_casted_array?
+      @_use_casted_array
     end
 
   end

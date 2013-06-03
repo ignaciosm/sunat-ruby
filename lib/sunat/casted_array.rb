@@ -11,41 +11,46 @@ module SUNAT
     extend Forwardable
     include Castable
 
-    def_delegators :@_array, :to_a, :==, :eql?, :keys, :values,
+    def_delegators :@_array,
+      :to_a, :==, :eql?,
+      :first, :last, :at, :length,
       :each, :reject, :empty?,
       :clear, :pop, :shift, :delete, :delete_at,
-      :encode_json, :as_json, :to_json
+      :encode_json, :as_json, :to_json,
+      :inspect
 
     def initialize(owner, property, values = [])
       @_array = []
       self.casted_by = owner
       self.casted_by_property = property
-      if values.is_a?(Array)
-        values.each{|value| self << value}
+      if values.respond_to?(:each)
+        values.each do |value|
+          self.push(value)
+        end
       end
     end
 
     def <<(obj)
-      @_array << instantiate_and_cast(obj)
+      @_array << instantiate_and_build(obj)
     end
 
     def push(obj)
-      @_array.push(instantiate_and_cast(obj))
+      @_array.push(instantiate_and_build(obj))
     end
 
     def unshift(obj)
-      @_array.unshift(instantiate_and_cast(obj))
+      @_array.unshift(instantiate_and_build(obj))
     end
 
     def []= index, obj
-      @_array[index] = instantiate_and_cast(obj)
+      @_array[index] = instantiate_and_build(obj)
     end
 
 
     protected
 
-    def instantiate_and_cast(obj)
-      casted_by_property.cast(casted_by, obj)
+    def instantiate_and_build(obj)
+      casted_by_property.build(casted_by, obj)
     end
 
 

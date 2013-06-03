@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SUNAT::Attributes do
+describe SUNAT::Properties do
 
   before :each do
     @model = Class.new do
@@ -33,6 +33,49 @@ describe SUNAT::Attributes do
       @obj.set_attribute(:name, name)
       @obj[:name].should eql(name)
     end
+  end
+
+  describe ".properties" do
+
+    it "should be instantiated after property set" do
+      @model.properties.should_not be_nil
+      @model.properties.class.should eql(Hash)
+    end
+
+    it "should be null if no properties" do
+      model = Class.new do
+        include SUNAT::Model
+      end
+      model.properties.should be_nil
+    end
+
+  end
+
+  describe ".property" do
+
+    it "should fail if no type is defined" do
+      @model.properties.length.should eql(1)
+      expect {
+        @model.property :foobar
+      }.to raise_error(ArgumentError)
+      @model.properties.length.should eql(1)
+    end
+
+    it "should create a new property with helper methods" do
+      @model.properties.length.should eql(1)
+      @model.property :desc, String
+      @model.properties.length.should eql(2)
+
+      prop = @model.properties[:desc]
+      prop.class.should eql(SUNAT::Property)
+
+      @obj.should respond_to(:desc)
+      @obj.should respond_to(:desc=)
+
+      @obj.desc = "test"
+      @obj.desc.should eql("test")
+    end
+
   end
 
 
