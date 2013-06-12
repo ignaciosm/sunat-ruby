@@ -3,12 +3,12 @@ module SUNAT
   # The receipt summary is one of the primary or root models. It can be
   # used to generate an XML document suitable for presentation.
   #
+  
+  # TODO: IssueDate -> Implement for all the Documents.
   class DailyReceiptSummary
     include Model
 
     property :reference_date, Date
-    
-    property :issue_date, Date
 
     property :accounting_supplier, AccountingSupplierParty
     
@@ -22,7 +22,6 @@ module SUNAT
     def initialize
       self.notes = []
       self.lines = []
-      self.issue_date = Date.today
     end
   end
 end

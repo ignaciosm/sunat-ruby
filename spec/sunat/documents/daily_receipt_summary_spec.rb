@@ -21,10 +21,6 @@ describe SUNAT::DailyReceiptSummary do
       summary.lines.should_not be_nil
       summary.lines.should be_empty
     end
-    
-    it "should initialize the issue_date with the current date." do
-      summary.issue_date.should eq(Date.today)
-    end
   end
   
   describe "validations" do
