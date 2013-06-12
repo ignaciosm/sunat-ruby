@@ -1,8 +1,3 @@
-require "sunat/models/billing_payment"
-require "sunat/models/allowance_charge"
-require "sunat/models/payment_amount"
-require "sunat/models/tax_total"
-
 module SUNAT
 
   class SummaryDocumentsLine

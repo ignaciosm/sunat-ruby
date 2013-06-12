@@ -1,5 +1,3 @@
-require "sunat/models/tax_sub_total"
-
 module SUNAT
 
   class TaxTotal

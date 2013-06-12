@@ -1,6 +1,3 @@
-require "sunat/models/accounting_supplier_party"
-require "sunat/models/summary_documents_line"
-
 module SUNAT
   #
   # The receipt summary is one of the primary or root models. It can be

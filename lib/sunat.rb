@@ -18,6 +18,15 @@ require "sunat/property"
 require "sunat/validations"
 require "sunat/model"
 
+# Models
+require "sunat/models/payment_amount"
+require "sunat/models/tax_sub_total"
+require "sunat/models/tax_total"
+require "sunat/models/billing_payment"
+require "sunat/models/accounting_supplier_party"
+require "sunat/models/allowance_charge"
+require "sunat/models/summary_documents_line"
+
 # Documents
 require "sunat/documents/daily_receipt_summary.rb"
 
