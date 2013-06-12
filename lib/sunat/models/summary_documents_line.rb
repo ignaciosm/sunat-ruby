@@ -1,5 +1,7 @@
 require "sunat/models/billing_payment"
+require "sunat/models/allowance_charge"
 require "sunat/models/payment_amount"
+require "sunat/models/tax_total"
 
 module SUNAT
 
@@ -19,6 +21,13 @@ module SUNAT
     end
 
     property :billing_payments, [BillingPayment]
+    property :allowance_charges, [AllowanceCharge]
+    property :tax_totals, [TaxTotal]
+    
+    def initialize
+      self.billing_payments = []
+      self.allowance_charges = []
+    end
   end
 
 end

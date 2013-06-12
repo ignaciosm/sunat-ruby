@@ -37,6 +37,16 @@ module ActiveModel
       end
     end
     
+    # Tests if not empty. The LengthValidator only works with Strings
+    class NotEmptyValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)        
+        if !value.nil? and value.any?
+          messae = (options[:message] || "should have at least one member.")
+          record.errors.add attribute, messae
+        end
+      end
+    end
+    
     class SunatDocumentValidator < ActiveModel::EachValidator
       SUNAT_CHARACTERS_SIZE = 11
       
@@ -45,7 +55,7 @@ module ActiveModel
           message = (options[:message] || "should have #{SUNAT_CHARACTERS_SIZE} characters")
           record.errors.add attribute, message
         end
-      end      
+      end
     end
     
   end

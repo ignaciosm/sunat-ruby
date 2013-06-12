@@ -20,6 +20,7 @@ module SUNAT
     property :notes, [String]
     
     validates :accounting_supplier, existence: true
+    validates :lines, not_empty: true
     
     def initialize
       self.notes = []

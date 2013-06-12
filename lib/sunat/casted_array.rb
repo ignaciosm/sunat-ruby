@@ -17,7 +17,7 @@ module SUNAT
       :each, :reject, :empty?,
       :clear, :pop, :shift, :delete, :delete_at,
       :encode_json, :as_json, :to_json,
-      :inspect
+      :inspect, :any?
 
     def initialize(owner, property, values = [])
       @_array = []
