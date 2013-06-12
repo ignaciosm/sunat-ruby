@@ -19,7 +19,7 @@ require "sunat/validations"
 require "sunat/model"
 
 # Declaration modules
-require "sunat/models/receipt_summary"
+# require "sunat/models/receipt_summary"
 
 module SUNAT
   # Your code goes here...
