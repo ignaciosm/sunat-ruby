@@ -1,3 +1,5 @@
+require "sunat/models/billing_payment"
+
 module SUNAT
 
   class SummaryDocumentsLine

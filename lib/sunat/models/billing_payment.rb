@@ -1,3 +1,5 @@
+require "sunat/models/payment_amount"
+
 module SUNAT
 
   class BillingPayment
