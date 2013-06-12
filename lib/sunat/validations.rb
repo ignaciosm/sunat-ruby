@@ -29,11 +29,24 @@ end
 # 
 module ActiveModel
   module Validations
-    # Tests nil. The default PresenceValidator only tests string emptyness.
+    
+    # Tests if not nil. The default PresenceValidator only tests string emptyness.
     class ExistenceValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, value)
-        record.errors.add attribute, (options[:message] || "is nil.") if value.nil?
+        record.errors.add attribute, (options[:message] || "doesn't exist.") if value.nil?
       end
     end
+    
+    class SunatDocumentValidator < ActiveModel::EachValidator
+      SUNAT_CHARACTERS_SIZE = 11
+      
+      def validate_each(record, attribute, value)
+        if !value.nil? and value.size != SUNAT_CHARACTERS_SIZE
+          message = (options[:message] || "should have #{SUNAT_CHARACTERS_SIZE} characters")
+          record.errors.add attribute, message
+        end
+      end      
+    end
+    
   end
 end

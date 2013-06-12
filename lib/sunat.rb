@@ -18,7 +18,7 @@ require "sunat/property"
 require "sunat/validations"
 require "sunat/model"
 
-# Declaration modules
+# Documents
 require "sunat/documents/daily_receipt_summary.rb"
 
 module SUNAT
