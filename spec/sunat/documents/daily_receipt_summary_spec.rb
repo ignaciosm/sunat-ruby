@@ -1,5 +1,4 @@
 require 'spec_helper'
-require "sunat/models/accounting_supplier_party"
 
 describe SUNAT::DailyReceiptSummary do
   
@@ -8,7 +7,7 @@ describe SUNAT::DailyReceiptSummary do
   end
   
   let :account_supplier do
-    SUNAT::AccountingSupplierParty.new
+    SUNAT::AccountingParty.new
   end
   
   describe ".new" do

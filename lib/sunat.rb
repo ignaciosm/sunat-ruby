@@ -23,12 +23,23 @@ require "sunat/models/payment_amount"
 require "sunat/models/tax_sub_total"
 require "sunat/models/tax_total"
 require "sunat/models/billing_payment"
-require "sunat/models/accounting_supplier_party"
+require "sunat/models/country"
+require "sunat/models/postal_address"
+require "sunat/models/party_legal_entity"
+require "sunat/models/party"
+require "sunat/models/accounting_party"
 require "sunat/models/allowance_charge"
 require "sunat/models/summary_documents_line"
+require "sunat/models/document_reference"
+require "sunat/models/quantity"
+require "sunat/models/price_reference"
+require "sunat/models/item"
+require "sunat/models/invoice_line"
 
 # Documents
 require "sunat/documents/daily_receipt_summary.rb"
+require "sunat/documents/invoice.rb"
+require "sunat/documents/paystub.rb"
 
 module SUNAT
   # Your code goes here...

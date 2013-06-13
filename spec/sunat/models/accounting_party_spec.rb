@@ -1,9 +1,8 @@
 require 'spec_helper'
-require "sunat/models/accounting_supplier_party"
 
-describe SUNAT::AccountingSupplierParty do
+describe  do
   let :accounting_supplier_party do
-    SUNAT::AccountingSupplierParty.new
+    SUNAT::AccountingParty.new
   end
   
   describe "validations" do

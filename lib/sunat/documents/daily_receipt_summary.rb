@@ -10,7 +10,7 @@ module SUNAT
 
     property :reference_date, Date
 
-    property :accounting_supplier, AccountingSupplierParty
+    property :accounting_supplier, AccountingParty
     
     property :lines, [SummaryDocumentsLine]
     
