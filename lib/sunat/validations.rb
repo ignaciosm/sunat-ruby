@@ -21,8 +21,8 @@ module SUNAT
   end
 end
 
-# Add custom validators here to allow it to be used from any model
-# allowing everty validator which extends from EachValidator
+# Add custom validators here to allow it to be used from any model,
+# allowing every validator which extends from EachValidator
 # to be used with the validates method.
 # 
 # validates :field, existence: true #=> ExistenceValidator
@@ -41,8 +41,8 @@ module ActiveModel
     class NotEmptyValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, value)        
         if !value.nil? and value.any?
-          messae = (options[:message] || "should have at least one member.")
-          record.errors.add attribute, messae
+          message = (options[:message] || "should have at least one member.")
+          record.errors.add attribute, message
         end
       end
     end
