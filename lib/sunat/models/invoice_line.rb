@@ -12,7 +12,7 @@ module SUNAT
     property :invoiced_quantity,      Quantity
     property :line_extension_amount,  PaymentAmount # selling value
     property :price,                  Price
-    property :pricing_reference,      PricingReference
+    property :pricing_reference,      PriceReference
     property :tax_totals,             [TaxTotal]
     property :items,                  [Item]
   end

@@ -1,5 +1,4 @@
 module SUNAT
-
   class AccountingParty
     include Model
     
@@ -9,5 +8,4 @@ module SUNAT
     
     validates :account_id, existence: true, presence: true, sunat_document: true
   end
-
 end
