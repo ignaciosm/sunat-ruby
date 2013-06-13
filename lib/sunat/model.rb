@@ -12,6 +12,7 @@ module SUNAT
       include Attributes
       include Properties
       include Validations
+      include Serializable
     end
 
     def initialize(attrs = {})
