@@ -19,6 +19,11 @@ module SUNAT
       # Use the `Properties` module's `#set_attribtues` method
       set_attributes(attrs)
     end
+    
+    
+    def is_model?
+      true
+    end
 
     module ClassMethods
 

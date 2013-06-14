@@ -14,7 +14,7 @@ module SUNAT
     def_delegators :@_array,
       :to_a, :==, :eql?,
       :first, :last, :at, :length,
-      :each, :reject, :empty?,
+      :each, :reject, :empty?, :map,
       :clear, :pop, :shift, :delete, :delete_at,
       :encode_json, :as_json, :to_json,
       :inspect, :any?
@@ -44,6 +44,12 @@ module SUNAT
 
     def []= index, obj
       @_array[index] = instantiate_and_build(obj)
+    end
+    
+    def contains_models?
+      @_array.all? do |member|
+        member.respond_to?(:is_model?) and member.is_model?
+      end
     end
 
 

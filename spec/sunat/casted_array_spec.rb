@@ -52,5 +52,18 @@ describe SUNAT::CastedArray do
     end
 
   end
+  
+  describe "contains models?" do
+
+    before :each do
+      @prop = SUNAT::Property.new(:item, submodel)
+      @empty_obj = SUNAT::CastedArray.new(owner, @prop, [])
+    end
+    
+    it "should contains models if all of this members are models" do
+      @empty_obj << submodel.new
+      @empty_obj.contains_models?.should eq(true)
+    end
+  end
 
 end

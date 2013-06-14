@@ -47,6 +47,11 @@ describe SUNAT::ModelFlatter do
   end
   
   context "with a referenced object" do
+    
+    let :plain_array do
+      ['John', 'Michael', 'Joseph']
+    end
+    
     before(:all) do
       @aux_klass = Class.new do
         include SUNAT::Model
@@ -59,16 +64,20 @@ describe SUNAT::ModelFlatter do
       @klass = Class.new do
         include SUNAT::Model
       
-        property :name, String
-        property :aux,  Auxiliary
+        property :name,     String
+        property :aux,      Auxiliary
+        property :names,    [String]
+        property :aux_list, [Auxiliary]
       end
-      
-      @aux_model = @aux_klass.new
-      @aux_model.age = 100
+    end
+    
+    before(:each) do
+      @aux_model = Auxiliary.new
+      @aux_model.age = 20
       
       @model = @klass.new
       @model.name = "name"
-      @model.aux = Auxiliary.new(age: 20)
+      @model.aux = @aux_model
     end
   
     let :flatter do
@@ -83,6 +92,37 @@ describe SUNAT::ModelFlatter do
             'age' => 20
           }
         }
+        flatter.value.should eq(expected)
+      end
+      
+      it "should transform a model and include an array of plain objects" do
+        expected = {
+          'name' => 'name',
+          'aux' => {
+            'age' => 20
+          },
+          'names' => plain_array
+        }
+        
+        @model.names = plain_array
+        
+        flatter.value.should eq(expected)
+      end
+      
+      it "should transform a model and include an array of references as nested plain objects" do
+        expected = {
+          'name' => 'name',
+          'aux' => {
+            'age' => 20
+          },
+          'aux_list' => [
+            { 'age' => 17 },
+            { 'age' => 22 }
+          ]
+        }
+        
+        @model.aux_list = [Auxiliary.new(age: 17), Auxiliary.new(age: 22)]
+        
         flatter.value.should eq(expected)
       end
     end
