@@ -19,6 +19,7 @@ require "sunat/validations"
 require "sunat/model_flatter"
 require "sunat/serializable"
 require "sunat/model"
+require "sunat/document"
 
 # Models
 require "sunat/models/payment_amount"

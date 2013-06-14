@@ -1,4 +1,5 @@
 module SUNAT
+  
   class SellersItemIdentification
     include Model
     

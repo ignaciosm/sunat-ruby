@@ -1,4 +1,5 @@
 module SUNAT
+  
   class PostalAddress
     include Model
     

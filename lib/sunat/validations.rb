@@ -47,13 +47,30 @@ module ActiveModel
       end
     end
     
-    class SunatDocumentValidator < ActiveModel::EachValidator
-      SUNAT_CHARACTERS_SIZE = 11
+    # RUC Document Validator
+    class RucDocumentValidator < ActiveModel::EachValidator
+      RUC_CHARACTERS_SIZE = 11
       
       def validate_each(record, attribute, value)
-        if !value.nil? and value.size != SUNAT_CHARACTERS_SIZE
-          message = (options[:message] || "should have #{SUNAT_CHARACTERS_SIZE} characters")
+        if !value.nil? and value.size != RUC_CHARACTERS_SIZE
+          message = (options[:message] || "should have #{RUC_CHARACTERS_SIZE} characters")
           record.errors.add attribute, message
+        end
+      end
+    end
+    
+    # Currency Code Validator
+    class CurrencyCodeValidator < ActiveModel::EachValidator
+      CURRENCY_CODE_LENGTH = 3
+      CURRENCY_CODE_FORMAT = /[a-zA-Z]{3}|\d{3}/
+      
+      def validate_each(record, attribute, value)
+        if !value.nil?
+          valid = value.size == CURRENCY_CODE_LENGTH && !!(value =~ CURRENCY_CODE_FORMAT)
+          if not valid
+            message = (options[:message] || "should be a valid currency code according to ISO 4217.")
+            record.errors.add attribute, message
+          end
         end
       end
     end

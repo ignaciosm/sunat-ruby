@@ -1,4 +1,5 @@
 module SUNAT
+  
   class Party
     include Model
     

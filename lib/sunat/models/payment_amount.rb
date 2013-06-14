@@ -5,7 +5,9 @@ module SUNAT
 
     # Money amounts always in lowest common denominator, so integer only!
     property :value,    Integer
-    property :currency, String    
+    property :currency, String
+    
+    validates :currency, currency_code: true 
   end
 
 end

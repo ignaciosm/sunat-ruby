@@ -1,9 +1,10 @@
 module SUNAT
+  
   class AlternativeConditionPrice
     include Model
     
     property :price_amount, PaymentAmount
-    property :price_type,   String # TODO: Search for the valid price type codes
+    property :price_type,   String # TODO: Range in Catalog # 16
   end
   
   class PriceReference

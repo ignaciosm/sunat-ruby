@@ -2,8 +2,11 @@ module SUNAT
   
   module Serializable
     def to_json
-      plain = ModelFlatter.new(self)
-      MultiJson.dump(plain.value)
+      MultiJson.dump(to_plain)
+    end
+    
+    def to_plain
+      ModelFlatter.new(self).value
     end
   end
 end
