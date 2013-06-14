@@ -1,6 +1,6 @@
 module SUNAT
   
-  module AbstractInvoice
+  module PaymentDocument
     
     def self.extended(base)
       base.property :id,                             String # serie + correlative number

@@ -6,7 +6,7 @@ module SUNAT
   #
   
   class Invoice < Document
-    extend AbstractInvoice
+    extend PaymentDocument
     
     # All the invoice structure is identical
     # to the paystub's one. All the structure

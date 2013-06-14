@@ -42,7 +42,7 @@ require "sunat/models/invoice_line"
 
 # Documents
 require "sunat/documents/daily_receipt_summary"
-require "sunat/documents/abstract_invoice"
+require "sunat/documents/payment_document"
 require "sunat/documents/invoice"
 require "sunat/documents/paystub"
 
