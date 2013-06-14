@@ -16,6 +16,11 @@ task :console do |t, command = default_console|
     $: << File.join(Dir.pwd, 'lib')
     require 'sunat'
     include SUNAT
+    begin
+      require "awesome_print"
+    rescue Exception => e
+    end
+    
     binding.pry
   else
     code = <<CODE

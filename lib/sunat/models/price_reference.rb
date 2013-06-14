@@ -9,5 +9,7 @@ module SUNAT
   
   class PriceReference
     include Model
+    
+    property :alternative_condition_price, AlternativeConditionPrice
   end
 end

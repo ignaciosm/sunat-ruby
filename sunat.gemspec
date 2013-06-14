@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "multi_json"
   spec.add_development_dependency "annotations"
+  spec.add_development_dependency "awesome_print"
 end

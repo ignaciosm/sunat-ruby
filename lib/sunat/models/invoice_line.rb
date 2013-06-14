@@ -15,5 +15,10 @@ module SUNAT
     property :pricing_reference,      PriceReference
     property :tax_totals,             [TaxTotal]
     property :items,                  [Item]
+    
+    def initialize
+      self.tax_totals = []
+      self.items = []
+    end
   end
 end

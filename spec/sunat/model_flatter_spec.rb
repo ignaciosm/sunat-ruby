@@ -125,6 +125,8 @@ describe SUNAT::ModelFlatter do
         
         flatter.value.should eq(expected)
       end
+      
+      it "shouldn't allow any empty array in the plain object"
     end
   end
   

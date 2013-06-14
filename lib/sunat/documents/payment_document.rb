@@ -9,12 +9,18 @@ module SUNAT
       base.property :accounting_supplier_party,      AccountingParty
       base.property :accounting_customer_party,      AccountingParty
       base.property :legal_monetary_total,           PaymentAmount
+      base.property :invoice_lines,                  [InvoiceLine]
       base.property :depatch_document_references,    [DocumentReference] # spanish: Guías de remisión
       base.property :additional_document_references, [DocumentReference]
       base.property :tax_totals,                     [TaxTotal]
-      base.property :invoice_lines,                  [InvoiceLine]
       
       base.validates :document_currency_code, existence: true, currency_code: true
+      
+      base.class_eval do
+        def initialize
+          self.invoice_lines = []
+        end
+      end
     end
   end
 end
