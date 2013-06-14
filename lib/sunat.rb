@@ -29,6 +29,7 @@ require "sunat/models/billing_payment"
 require "sunat/models/country"
 require "sunat/models/postal_address"
 require "sunat/models/party_legal_entity"
+require "sunat/models/physical_location"
 require "sunat/models/party"
 require "sunat/models/accounting_party"
 require "sunat/models/allowance_charge"
@@ -40,9 +41,10 @@ require "sunat/models/item"
 require "sunat/models/invoice_line"
 
 # Documents
-require "sunat/documents/daily_receipt_summary.rb"
-require "sunat/documents/invoice.rb"
-require "sunat/documents/paystub.rb"
+require "sunat/documents/daily_receipt_summary"
+require "sunat/documents/abstract_invoice"
+require "sunat/documents/invoice"
+require "sunat/documents/paystub"
 
 module SUNAT
   # Your code goes here...

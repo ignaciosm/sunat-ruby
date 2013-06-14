@@ -6,17 +6,10 @@ module SUNAT
   #
   
   class Invoice < Document
+    extend AbstractInvoice
     
-    property :id,                             String
-    property :invoice_type_code,              String # TODO: Range in Catalog # 01
-    property :document_currency_code,         String
-    property :accounting_supplier_party,      AccountingParty
-    property :accounting_customer_party,      AccountingParty
-    property :legal_monetary_total,           PaymentAmount
-    property :depatch_document_references,    [DocumentReference] # spanish: Guías de remisión
-    property :additional_document_references, [DocumentReference]
-    property :invoice_lines,                  [InvoiceLine]
-    
-    validates :document_currency_code, existence: true, currency_code: true
+    # All the invoice structure is identical
+    # to the paystub's one. All the structure
+    # is inherited from AbstractInvoice
   end
 end
