@@ -7,7 +7,7 @@ module SUNAT
     end
 
     def set_attribute(name, value)
-      property = self.class.properties[name.to_sym]
+      property = get_property(name)
       if property.nil?
         self[name.to_sym] = value
       else
@@ -23,6 +23,12 @@ module SUNAT
       attrs.each do |key, value|
         set_attribute(key, value)
       end
+    end
+    
+    private
+    
+    def get_property(name)
+      self.class.properties[name.to_sym]
     end
 
     module ClassMethods
@@ -51,6 +57,34 @@ module SUNAT
         # Setter
         define_method "#{property.name}=" do |value|
           set_attribute(property.name, value)
+        end
+        
+        # Build method
+        # Instantiates the object based on the property
+        # set its value and attach it to a block
+        # 
+        # Usage:
+        # 
+        # class Profile
+        #   property :name, String
+        # end
+        # 
+        # class User
+        #   property :profile, Profile
+        # end
+        # 
+        # user = User.new
+        # user.build_profile do |profile|
+        #   profile.name = "Profile Name"
+        # end
+        # 
+        if property.type.respond_to?(:new)
+          define_method "build_#{property.name}" do |*args, &block|
+            value = property.type.new(*args)
+            set_attribute(property.name, value)
+            block.call(value)
+            value
+          end
         end
       end
 

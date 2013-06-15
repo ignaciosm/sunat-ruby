@@ -1,12 +1,21 @@
 require 'spec_helper'
 
 describe SUNAT::Properties do
+  
+  before :all do
+    @aux_model = Class.new do
+      include SUNAT::Model
+      property :age, Fixnum
+    end
+    Kernel.const_set("Aux", @aux_model)
+  end
 
   before :each do
     @model = Class.new do
       include SUNAT::Model
       property :name, String
     end
+    
     @obj = @model.new
   end
 
@@ -74,6 +83,18 @@ describe SUNAT::Properties do
 
       @obj.desc = "test"
       @obj.desc.should eql("test")
+    end
+    
+    it "should create a new property with a build property method" do
+      @model.property :aux, Aux
+      
+      @obj.should_receive(:called_in_block)
+      @obj.should respond_to(:build_aux)
+      @obj.build_aux do |aux|
+        @obj.called_in_block
+        aux.age = 18
+      end
+      @obj.aux.age.should eq(18)
     end
 
   end

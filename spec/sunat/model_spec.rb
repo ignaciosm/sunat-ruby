@@ -1,15 +1,25 @@
 require 'spec_helper'
 
 describe SUNAT::Model do
-
-  describe "#initialize" do
-
-    before :each do
-      @model = Class.new do
-        include SUNAT::Model
-        property :name, String
+  
+  before :each do
+    @model = Class.new do
+      include SUNAT::Model
+      property :name, String
+    end
+  end
+  
+  describe '.build' do
+    it "should create a Model and give a block to build it" do
+      @model.should_receive(:call_in_block)
+      @model.build do |model|
+        @model.call_in_block
+        model.should be_kind_of(@model)
       end
     end
+  end
+
+  describe "#initialize" do
 
     it "should accept nil" do
       expect {

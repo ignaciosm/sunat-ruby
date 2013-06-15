@@ -26,7 +26,11 @@ module SUNAT
     end
 
     module ClassMethods
-
+      def build(*attrs)        
+        instance = self.new(*attrs)
+        yield instance if block_given?
+        instance
+      end
     end
 
   end
