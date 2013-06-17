@@ -1,5 +1,45 @@
 module SUNAT
   module XMLBuilders
+    # TODO: FULL OF STUBS
+    class Certificate
+      
+      def cert
+        # @_certificate ||= OpenSSL::X509::Certificate.new(@options[:certificate])
+        ""
+      end
+      
+      def issuer
+        # Provide the certificate issuer in RFC2253 format
+        # @cert.issuer.to_s.split(/\//).reject{|n| n.to_s.empty?}.join(',')
+        ""
+      end
+    end
+    
+    # TODO: FULL OF STUBS
+    class Signature
+      attr_reader :certificate
+      
+      def initialize(certificate = Certificate.new)
+        @certificate = certificate
+      end
+      
+      def id # ID
+        "20109451523"
+      end
+      
+      def party_id
+        "20100454523" # party's RUC
+      end
+      
+      def party_name
+         "SOPORTE TECNOLOGICO EIRL" # party's name
+      end
+      
+      def uri
+        "#SignST"
+      end
+    end
+    
     class InvoiceBuilder
       attr_accessor :invoice
       
@@ -12,6 +52,7 @@ module SUNAT
       
       def initialize(invoice)
         self.invoice = invoice
+        self.signature = build_signature
       end
       
       def get_xml        
@@ -32,6 +73,10 @@ module SUNAT
       end
     
       private
+      
+      def build_signature
+        Signature.new
+      end
       
       def build_lines(xml)
         invoice.invoice_lines.each { |line| build_line xml, line }
@@ -202,30 +247,30 @@ module SUNAT
       
       def build_general_data(xml)
         xml['cbc'].UBLVersionID "2.0"
-        xml['cbc'].CustomizationID "1.0" # TODO: Research
-        xml['cbc'].ID invoice.id
-        xml['cbc'].IssueDate format_date(invoice.issue_date)
-        xml['cbc'].InvoiceTypeCode invoice.invoice_type_code
+        xml['cbc'].CustomizationID      invoice.customization_id
+        xml['cbc'].ID                   invoice.id
+        xml['cbc'].IssueDate            format_date(invoice.issue_date)
+        xml['cbc'].InvoiceTypeCode      invoice.invoice_type_code
         xml['cbc'].DocumentCurrencyCode invoice.document_currency_code
       end
       
       def build_general_signature_information(xml)
         xml['cac'].Signature do
-          xml['cbc'].ID 'IDSignKG' # TODO: Research
+          xml['cbc'].ID 'IDSignKG' # id of the signature
         end
         
         xml['cac'].SignatoryParty do
           xml['cac'].PartyIdentification do
-            xml['cbc'].Id "20100454523" # TODO: Research
+            xml['cbc'].Id signature.party_id
           end
           xml['cac'].PartyName do
-            xml['cbc'].Name "SOPORTE TECNOLOGICO EIRL" # TODO: Research
+            xml['cbc'].Name signature.party_name
           end
         end
         
         xml['cac'].DigitalSignatureAttachment do
           xml['cac'].ExternalReference do
-            xml['cbc'].URI "#SignST" # TODO: Research
+            xml['cbc'].URI signature.uri
           end
         end
       end
@@ -246,7 +291,7 @@ module SUNAT
         xml.Invoice(attributes, &block)
       end
     
-      # STUB
+      # TODO: STUB
       def additional_monetary_totals
         [
           { id: 1001, currency: "PEN", amount: 348199.15 },
@@ -255,7 +300,7 @@ module SUNAT
         ]
       end
     
-      # STUB
+      # TODO: STUB
       def additional_properties
         [
           { id: 1000, value: "CUATROCIENTOS VEINTITRES MIL DOSCIENTOS VEINTICINCO Y 00/100" }
@@ -296,26 +341,27 @@ module SUNAT
             xml['ds'].Transform(Algorithm: TRANSFORMATION_ALGORITHM)
           end
           xml['ds'].DigestMethod(Algorithm: DIGEST_ALGORITHM)
-          xml['ds'].DigestValue '' # TODO: Hash codified in Base64
+          xml['ds'].DigestValue '' # digest placeholder
         end
       end
     
       def build_signature_value(xml)
-        xml['ds'].SignatureMethod '' # TODO: signature codified in Base64
+        xml['ds'].SignatureValue '' # signature base64 encoded placeholder
       end
     
       def build_signature_key_info(xml)
         xml['ds'].KeyInfo do
           xml['ds'].X509Data do
-            xml['ds'].X509SubjectName '' # TODO: Research
-            xml['ds'].X509Certificate '' # TODO: Certificate information
+            certificate = signature.certificate
+            xml['ds'].X509SubjectName certificate.issuer
+            xml['ds'].X509Certificate certificate.cert
           end
         end
       end
     
       def build_signature_extension(xml)
         build_extension xml do
-          xml['ds'].Signature(Id: 'SignatureSP') do
+          xml['ds'].Signature(Id: signature.id) do
             build_signature_signed_info(xml)
             build_signature_value(xml)
             build_signature_key_info(xml)
