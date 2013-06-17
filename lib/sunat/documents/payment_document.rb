@@ -20,6 +20,9 @@ module SUNAT
         def initialize
           super
           self.invoice_lines = []
+          self.tax_totals = []
+          self.depatch_document_references = []
+          self.additional_document_references = []
         end
       end
     end

@@ -19,7 +19,7 @@ describe  do
     it "should create a party with a party_name object with a name from the accounting_party object" do
       name = "name"
       accounting_party.build_party_with_name(name)
-      accounting_party.party.party_name.name.should eq(name)
+      accounting_party.party.name.should eq(name)
     end
     
     it "should create a party with some part_legal_entity with a registration_name from the accounting_party object" do

@@ -12,7 +12,7 @@ module SUNAT
     include Model
     
     property :tax_exemption_reason_code,  String # TODO: IGV affectation in Catalogue # 07
-    property :tier_range,             String # TODO: ISC System in Catalogue # 08
+    property :tier_range,                 String # TODO: ISC System in Catalogue # 08
     property :tax_scheme,                 TaxScheme
   end
 

@@ -40,7 +40,7 @@ module ActiveModel
     # Tests if not empty. The LengthValidator only works with Strings
     class NotEmptyValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, value)        
-        if !value.nil? and value.any?
+        if value.present? and value.any?
           message = (options[:message] || "should have at least one member.")
           record.errors.add attribute, message
         end
@@ -52,7 +52,7 @@ module ActiveModel
       RUC_CHARACTERS_SIZE = 11
       
       def validate_each(record, attribute, value)
-        if !value.nil? and value.size != RUC_CHARACTERS_SIZE
+        if value.present? and value.size != RUC_CHARACTERS_SIZE
           message = (options[:message] || "should have #{RUC_CHARACTERS_SIZE} characters")
           record.errors.add attribute, message
         end
@@ -65,7 +65,7 @@ module ActiveModel
       CURRENCY_CODE_FORMAT = /[a-zA-Z]{3}|\d{3}/
       
       def validate_each(record, attribute, value)
-        if !value.nil?
+        if value.present?
           valid = value.size == CURRENCY_CODE_LENGTH && !!(value =~ CURRENCY_CODE_FORMAT)
           if not valid
             message = (options[:message] || "should be a valid currency code according to ISO 4217.")

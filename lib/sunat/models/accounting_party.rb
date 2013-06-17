@@ -11,9 +11,7 @@ module SUNAT
     
     def build_party_with_name(name)
       self.party = Party.new.tap do |party|
-        party.party_name = PartyName.new.tap do |party_name|
-          party_name.name = name
-        end
+        party.name = name
       end
     end
     

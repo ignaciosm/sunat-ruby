@@ -10,6 +10,10 @@ module SUNAT
   class PriceReference
     include Model
     
-    property :alternative_condition_price, AlternativeConditionPrice
+    property :alternative_condition_prices, [AlternativeConditionPrice]
+    
+    def initialize
+      self.alternative_condition_prices = []
+    end
   end
 end

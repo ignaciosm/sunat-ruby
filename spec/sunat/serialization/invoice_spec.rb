@@ -23,6 +23,29 @@ describe 'serialization of an invoice' do
         acp.build_party_with_legal_name "CECI FARMA IMPORT S.R.L."
       end
       
+      i.tax_totals << TaxTotal.build do |tt|
+        tt.build_tax_amount do |amount|
+          amount.value = 8745
+          amount.currency = "PEN"
+        end
+        
+        tt.sub_totals << TaxSubTotal.build do |st|
+          st.build_tax_amount do |amount|
+            amount.value = 26361
+            amount.currency = "PEN"
+          end
+
+          st.build_tax_category do |cat|
+            cat.tax_exemption_reason_code = "10"
+            cat.build_tax_scheme do |scheme|
+              scheme.id = "100"
+              scheme.name = "IGV"
+              scheme.tax_type_code = "VAT"
+            end
+          end
+        end
+      end
+      
       i.invoice_lines << InvoiceLine.build do |il|
         il.id = "1"
                 
@@ -37,14 +60,12 @@ describe 'serialization of an invoice' do
         end
         
         il.build_price do |p|
-          p.build_price_amount do |amount|
-            amount.value = 678
-            amount.currency = "PEN"
-          end
+          p.value = 678
+          p.currency = "PEN"
         end
         
         il.build_pricing_reference do |ref|
-          ref.build_alternative_condition_price do |acp|
+          ref.alternative_condition_prices << AlternativeConditionPrice.build do |acp|
             acp.price_type = "01"
             acp.build_price_amount do |amount|
               amount.value = 20

@@ -1,16 +1,9 @@
 module SUNAT
   
-  class PartyName
-    include Model
-    
-    property :name, String
-  end
-  
   class Party
     include Model
     
     property :name,                   String
-    property :party_name,             PartyName
     property :physical_location,      PhysicalLocation
     property :party_legal_entities,   [PartyLegalEntity]
     property :postal_addresses,       [PostalAddress]
@@ -20,6 +13,7 @@ module SUNAT
     
     def initialize
       self.party_legal_entities = []
+      self.postal_addresses = []
     end
   end
 end
