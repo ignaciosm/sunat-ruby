@@ -41,7 +41,7 @@ module SUNAT
     end
     
     class InvoiceBuilder
-      attr_accessor :invoice
+      attr_accessor :invoice, :signature
       
       DATE_FORMAT = "%Y-%m-%d"
       

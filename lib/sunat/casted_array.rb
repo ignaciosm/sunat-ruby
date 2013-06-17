@@ -50,13 +50,6 @@ module SUNAT
       @_array[index] = instantiate_and_build(obj)
     end
     
-    def contains_models?
-      @_array.all? do |member|
-        member.respond_to?(:is_model?) and member.is_model?
-      end
-    end
-
-
     protected
 
     def instantiate_and_build(obj)
