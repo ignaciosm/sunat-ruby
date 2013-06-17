@@ -1,16 +1,9 @@
 require 'spec_helper'
 
-# for more succint calls
+# for more succinct calls
 include SUNAT
 
 describe 'serialization of an invoice' do
-
-  # 1. Create a "real world" document
-  # 2. Before continuing with the test, look for the places where we can extract methods
-  # 3. Extract methods
-  #   3.1. Tests for the extracted methods
-  #   3.2. Create extract methods
-  # 4. Test if the serialization contains some of the attributes (not all)
   
   before :all do
     @invoice = Invoice.build do |i|
@@ -111,7 +104,7 @@ describe 'serialization of an invoice' do
   end
   
   it "should do nothing" do
-    # puts JSON.pretty_generate(@invoice.as_json)
+    puts @invoice.to_xml
   end
 
 end

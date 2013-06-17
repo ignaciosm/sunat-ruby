@@ -10,6 +10,10 @@ module SUNAT
     
     # All the paystub structure is identical
     # to the invoice's one. All the structure
-    # is inherited from AbstractInvoice
+    # is inherited from PaymentDocument
+    
+    def to_xml
+      
+    end
   end
 end

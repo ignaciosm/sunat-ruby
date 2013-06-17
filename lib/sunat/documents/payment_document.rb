@@ -18,6 +18,7 @@ module SUNAT
       
       base.class_eval do
         def initialize
+          super
           self.invoice_lines = []
         end
       end

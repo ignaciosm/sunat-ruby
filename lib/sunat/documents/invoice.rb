@@ -10,6 +10,14 @@ module SUNAT
     
     # All the invoice structure is identical
     # to the paystub's one. All the structure
-    # is inherited from AbstractInvoice
+    # is inherited from PaymentDocument
+    
+    def to_xml
+      xml_builder.get_xml
+    end
+    
+    def xml_builder
+      @xml_builder ||= XMLBuilders::InvoiceBuilder.new(self)
+    end
   end
 end

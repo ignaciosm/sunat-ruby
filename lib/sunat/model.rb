@@ -26,7 +26,7 @@ module SUNAT
 
     module ClassMethods
       # Little help. Equivalent to new.tap
-      def build(*attrs)        
+      def build(*attrs)
         instance = self.new(*attrs)
         yield instance if block_given?
         instance

@@ -38,11 +38,15 @@ require "sunat/models/price_reference"
 require "sunat/models/item"
 require "sunat/models/invoice_line"
 
+# Nokogiri
+require "nokogiri"
+
 # Documents
 require "sunat/documents/daily_receipt_summary"
 require "sunat/documents/payment_document"
 require "sunat/documents/invoice"
 require "sunat/documents/paystub"
+require "sunat/documents/xml_builders/invoice_builder"
 
 module SUNAT
   # Your code goes here...
