@@ -12,36 +12,27 @@ describe 'serialization of an invoice' do
   #   3.2. Create extract methods
   # 4. Test if the serialization contains some of the attributes (not all)
   
-  before :all do    
+  before :all do
     @invoice = Invoice.build do |i|
       i.id                      = "F002-10"
       i.invoice_type_code       = "01"
       i.document_currency_code  = "PEN"
       
-      i.accounting_supplier_party = AccountingParty.build do |asp|
+      i.build_accounting_supplier_party do |asp|
         asp.account_id = "20100113612"
         asp.additional_account_id = "6"
-        
-        asp.build_party do |party|
-          party.build_party_name do |party_name|
-            party_name.name = "K&G Laboratorios"
-          end
-        end
+        asp.build_party_with_name "K&G Laboratorios"
       end
       
-      i.accounting_customer_party = AccountingParty.build do |acp|
+      i.build_accounting_customer_party do |acp|
         acp.account_id = "20382170114"
         acp.additional_account_id = "6"
-        acp.build_party do |p|
-          p.party_legal_entities << PartyLegalEntity.build do |entity|
-            entity.registration_name = "CECI FARMA IMPORT S.R.L."
-          end
-        end
+        acp.build_party_with_legal_name "CECI FARMA IMPORT S.R.L."
       end
       
       i.invoice_lines << InvoiceLine.build do |il|
         il.id = "1"
-        
+                
         il.build_invoiced_quantity do |q|
           q.quantity = 300
           q.unit_code = "CS"
@@ -119,16 +110,8 @@ describe 'serialization of an invoice' do
     end
   end
   
-  it "should be valid" do
-    
-  end
-  
   it "should do nothing" do
-    # 3.times { puts "**" * 5 }
-    # 
-    puts JSON.pretty_generate(@invoice.to_plain)
-    # 
-    # 3.times { puts "**" * 5 }
+    # puts JSON.pretty_generate(@invoice.as_json)
   end
 
 end

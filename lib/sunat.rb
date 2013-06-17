@@ -16,8 +16,6 @@ require "sunat/attributes"
 require "sunat/properties"
 require "sunat/property"
 require "sunat/validations"
-require "sunat/model_flatter"
-require "sunat/serializable"
 require "sunat/model"
 require "sunat/document"
 

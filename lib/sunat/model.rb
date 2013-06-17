@@ -12,7 +12,6 @@ module SUNAT
       include Attributes
       include Properties
       include Validations
-      include Serializable
     end
 
     def initialize(attrs = {})
@@ -26,6 +25,7 @@ module SUNAT
     end
 
     module ClassMethods
+      # Little help. Equivalent to new.tap
       def build(*attrs)        
         instance = self.new(*attrs)
         yield instance if block_given?
