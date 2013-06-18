@@ -46,6 +46,7 @@ require "sunat/documents/daily_receipt_summary"
 require "sunat/documents/payment_document"
 require "sunat/documents/invoice"
 require "sunat/documents/paystub"
+require "sunat/signature"
 require "sunat/documents/xml_builders/invoice_builder"
 
 module SUNAT

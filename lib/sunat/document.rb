@@ -10,8 +10,9 @@ module SUNAT
     property :issue_date, Date
     property :customization_id, String
     
-    def initialize(today = Date.today)
-      self.issue_date = today
+    def initialize
+      super
+      self.issue_date = Date.today
     end
     
     def customization_id

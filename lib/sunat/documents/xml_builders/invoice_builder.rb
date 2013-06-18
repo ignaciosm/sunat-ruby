@@ -1,45 +1,7 @@
+require 'openssl'
+
 module SUNAT
-  module XMLBuilders
-    # TODO: FULL OF STUBS
-    class Certificate
-      
-      def cert
-        # @_certificate ||= OpenSSL::X509::Certificate.new(@options[:certificate])
-        ""
-      end
-      
-      def issuer
-        # Provide the certificate issuer in RFC2253 format
-        # @cert.issuer.to_s.split(/\//).reject{|n| n.to_s.empty?}.join(',')
-        ""
-      end
-    end
-    
-    # TODO: FULL OF STUBS
-    class Signature
-      attr_reader :certificate
-      
-      def initialize(certificate = Certificate.new)
-        @certificate = certificate
-      end
-      
-      def id # ID
-        "20109451523"
-      end
-      
-      def party_id
-        "20100454523" # party's RUC
-      end
-      
-      def party_name
-         "SOPORTE TECNOLOGICO EIRL" # party's name
-      end
-      
-      def uri
-        "#SignST"
-      end
-    end
-    
+  module XMLBuilders    
     class InvoiceBuilder
       attr_accessor :invoice, :signature
       
@@ -75,7 +37,7 @@ module SUNAT
       private
       
       def build_signature
-        Signature.new
+        SUNAT::SIGNATURE
       end
       
       def build_lines(xml)
