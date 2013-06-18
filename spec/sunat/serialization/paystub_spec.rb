@@ -6,7 +6,7 @@ include SUNAT
 describe 'serialization of an invoice' do
   
   before :all do
-    @paystub = Paystub.build do |i|
+    @invoice = Invoice.build do |i|
       i.id                      = "F002-10"
       i.invoice_type_code       = "01"
       i.document_currency_code  = "PEN"
@@ -125,7 +125,7 @@ describe 'serialization of an invoice' do
   end
   
   it "should do nothing" do
-    puts @paystub.to_xml
+    puts @invoice.to_xml
   end
 
 end

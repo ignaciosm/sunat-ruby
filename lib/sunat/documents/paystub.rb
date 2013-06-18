@@ -12,8 +12,8 @@ module SUNAT
     # to the invoice's one. All the structure
     # is inherited from PaymentDocument
     
-    def to_xml
-      
+    def xml_builder
+      @xml_builder ||= XMLBuilders::PaystubBuilder.new(self)
     end
   end
 end

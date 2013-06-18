@@ -27,7 +27,6 @@ require "sunat/models/billing_payment"
 require "sunat/models/country"
 require "sunat/models/postal_address"
 require "sunat/models/party_legal_entity"
-require "sunat/models/physical_location"
 require "sunat/models/party"
 require "sunat/models/accounting_party"
 require "sunat/models/allowance_charge"
@@ -38,6 +37,8 @@ require "sunat/models/price_reference"
 require "sunat/models/item"
 require "sunat/models/invoice_line"
 
+# OpenSSL
+require "openssl"
 # Nokogiri
 require "nokogiri"
 
@@ -47,7 +48,11 @@ require "sunat/documents/payment_document"
 require "sunat/documents/invoice"
 require "sunat/documents/paystub"
 require "sunat/signature"
+
+require "sunat/documents/xml_builders/basic_builder"
+require "sunat/documents/xml_builders/payment_document_builder"
 require "sunat/documents/xml_builders/invoice_builder"
+require "sunat/documents/xml_builders/paystub_builder"
 
 module SUNAT
   # Your code goes here...

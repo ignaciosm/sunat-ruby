@@ -1,10 +1,16 @@
 module SUNAT
   
+  class PhysicalLocation
+    include Model
+    
+    property :description, String
+  end
+  
   class Party
     include Model
     
     property :name,                   String
-    property :physical_location,      PhysicalLocation
+    property :physical_location,      PhysicalLocation # only for tacna and only for paystub
     property :party_legal_entities,   [PartyLegalEntity]
     property :postal_addresses,       [PostalAddress]
     

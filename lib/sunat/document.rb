@@ -15,6 +15,10 @@ module SUNAT
       self.issue_date = Date.today
     end
     
+    def to_xml
+      xml_builder.get_xml
+    end
+    
     def customization_id
       self['customization_id'] ||= DEFAULT_CUSTOMIZATION_ID
     end
