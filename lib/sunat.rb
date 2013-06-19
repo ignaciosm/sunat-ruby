@@ -46,13 +46,13 @@ require "nokogiri"
 require "sunat/documents/daily_receipt_summary"
 require "sunat/documents/payment_document"
 require "sunat/documents/invoice"
-require "sunat/documents/paystub"
+require "sunat/documents/receipt"
 require "sunat/signature"
 
 require "sunat/documents/xml_builders/basic_builder"
 require "sunat/documents/xml_builders/payment_document_builder"
 require "sunat/documents/xml_builders/invoice_builder"
-require "sunat/documents/xml_builders/paystub_builder"
+require "sunat/documents/xml_builders/receipt_builder"
 
 module SUNAT
   # Your code goes here...

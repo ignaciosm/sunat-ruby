@@ -11,7 +11,7 @@ module SUNAT
     DOCUMENT_TYPE_CODE = PaymentDocument::INVOICE
     
     # All the invoice structure is identical
-    # to the paystub's one. All the structure
+    # to the receipt's one. All the structure
     # is inherited from PaymentDocument
     
     def xml_builder

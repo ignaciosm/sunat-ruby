@@ -1,6 +1,6 @@
 module SUNAT
   module XMLBuilders
-    class PaystubBuilder < PaymentDocumentBuilder
+    class ReceiptBuilder < PaymentDocumentBuilder
       def build_party_physical_location(xml, party)
         return if party.physical_location.nil?
         
