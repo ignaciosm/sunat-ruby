@@ -17,6 +17,9 @@ module SUNAT
       
       DATE_FORMAT = "%Y-%m-%d"
       
+      CUSTOMIZATION_ID = "1.0"
+      UBL_VERSION_ID = "2.0"
+      
       ADDITIONAL_ROOT_ATTRIBUTES = {}
       
       def initialize(document)
@@ -88,6 +91,13 @@ module SUNAT
         doc
       end
       
+      def build_general_data(xml)
+        xml['cbc'].UBLVersionID         UBL_VERSION_ID
+        xml['cbc'].CustomizationID      CUSTOMIZATION_ID
+        xml['cbc'].ID                   document.id
+        xml['cbc'].IssueDate            format_date(document.issue_date)
+      end
+      
       def build_ubl_extensions(xml, &proc)
         if not block_given?
           proc = Proc.new do
@@ -139,6 +149,83 @@ module SUNAT
             build_signature_value(xml)
             build_signature_key_info(xml)
           end
+        end
+      end
+      
+      def build_general_signature_information(xml)
+        xml['cac'].Signature do
+          xml['cbc'].ID signature.id
+        
+          xml['cac'].SignatoryParty do
+            xml['cac'].PartyIdentification do
+              xml['cbc'].ID signature.party_id
+            end
+            xml['cac'].PartyName do
+              xml['cbc'].Name signature.party_name
+            end
+          end
+        
+          xml['cac'].DigitalSignatureAttachment do
+            xml['cac'].ExternalReference do
+              xml['cbc'].URI signature.uri
+            end
+          end
+        end
+      end
+      
+      def build_accounting_party(xml, top_level_party, &continuation)
+        xml['cbc'].CustomerAssignedAccountID top_level_party.account_id
+        xml['cbc'].AdditionalAccountID top_level_party.additional_account_id
+        
+        party = top_level_party.party
+        
+        xml['cac'].Party do
+          
+          if party.name.present?
+            xml['cac'].PartyName do
+              xml['cbc'].Name party.name
+            end
+          end
+          
+          if party.postal_addresses.any?
+            party.postal_addresses.each do |address|
+              xml['cac'].PostalAddress do
+                xml['cbc'].ID                   address.id
+                xml['cbc'].StreetName           address.street_name
+                xml['cbc'].CitySubdivisionName  address.city_subdivision_name
+                xml['cbc'].CountrySubentity     address.country_subentity
+                xml['cbc'].District             address.district
+                xml['cac'].Country do
+                  xml['cbc'].IdentificationCode address.country.identification_code
+                end
+              end
+            end
+          end
+          
+          if party.party_legal_entities.any?
+            party.party_legal_entities.each do |entity|
+              xml['cac'].PartyLegalEntity do
+                xml['cbc'].RegistrationName entity.registration_name
+              end
+            end
+            build_party_physical_location xml, party
+          end
+        end
+      end
+      
+      def build_party_physical_location(xml, party)
+        # implements if necesary.
+      end
+      
+      def build_accounting_customer_party(xml)        
+        xml['cac'].AccountingCustomerParty do
+          build_accounting_party xml, invoice.accounting_customer_party
+        end
+      end
+      
+      def build_accounting_supplier_party(xml, supplier = invoice.accounting_supplier_party)
+        xml['cac'].AccountingSupplierParty do
+          build_accounting_party xml, supplier
         end
       end
       

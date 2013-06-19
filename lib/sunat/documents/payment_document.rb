@@ -1,6 +1,6 @@
 module SUNAT
   class ReferralGuideline < DocumentReference
-    DOCUMENT_CODE = '09'
+    DOCUMENT_CODE = '09' # referral guideline
     
     def initialize
       super

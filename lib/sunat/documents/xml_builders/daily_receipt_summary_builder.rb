@@ -9,10 +9,20 @@ module SUNAT
       def get_xml
         make_xml :SummaryDocuments do |xml|
           build_ubl_extensions xml do
-            build_signature_extension(xml)
+            build_signature_extension xml
+            build_general_data xml
+            build_notes xml
+            build_general_signature_information xml            
+            build_accounting_supplier_party xml, document.accounting_supplier
           end
         end
-      end      
+      end
+      
+      def build_notes(xml)
+        document.notes.each do |note|
+          xml['cbc'].Note(note)
+        end
+      end
     end
   end
 end

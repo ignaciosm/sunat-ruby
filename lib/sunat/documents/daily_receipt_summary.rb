@@ -5,7 +5,8 @@ module SUNAT
   #
   
   class DailyReceiptSummary < Document
-
+    
+    property :id,                   String
     property :reference_date,       Date
     property :accounting_supplier,  AccountingParty
     property :lines,                [SummaryDocumentsLine]

@@ -18,6 +18,7 @@ module SUNAT
         make_xml :Invoice do |xml|
           build_ubl_extensions xml
           build_general_data xml
+          build_payment_general_data xml
           build_general_signature_information xml
           build_accounting_supplier_party xml
           build_accounting_customer_party xml
@@ -28,10 +29,6 @@ module SUNAT
       end
       
       private
-      
-      def build_party_physical_location(xml, party)
-        # implements if necesary.
-      end
       
       def build_lines(xml)
         invoice.invoice_lines.each { |line| build_line xml, line }
@@ -138,86 +135,9 @@ module SUNAT
         end
       end
       
-      def build_accounting_party(xml, top_level_party, &continuation)
-        xml['cbc'].CustomerAssignedAccountID top_level_party.account_id
-        xml['cbc'].AdditionalAccountID top_level_party.additional_account_id
-        
-        party = top_level_party.party
-        
-        xml['cac'].Party do
-          
-          if party.name.present?
-            xml['cac'].PartyName do
-              xml['cbc'].Name party.name
-            end
-          end
-          
-          if party.postal_addresses.any?
-            party.postal_addresses.each do |address|
-              xml['cac'].PostalAddress do
-                xml['cbc'].ID                   address.id
-                xml['cbc'].StreetName           address.street_name
-                xml['cbc'].CitySubdivisionName  address.city_subdivision_name
-                xml['cbc'].CountrySubentity     address.country_subentity
-                xml['cbc'].District             address.district
-                xml['cac'].Country do
-                  xml['cbc'].IdentificationCode address.country.identification_code
-                end
-              end
-            end
-          end
-          
-          if party.party_legal_entities.any?
-            party.party_legal_entities do |entity|
-              xml['cac'].PartyLegalEntity do
-                xml['cbc'].RegistrationName entity.registration_name
-              end
-            end
-            build_party_physical_location xml, party
-          end
-        end
-      end
-      
-      def build_accounting_customer_party(xml)        
-        xml['cac'].AccountingCustomerParty do
-          build_accounting_party xml, invoice.accounting_customer_party
-        end
-      end
-      
-      def build_accounting_supplier_party(xml)        
-        xml['cac'].AccountingSupplierParty do
-          build_accounting_party xml, invoice.accounting_supplier_party
-        end
-      end
-      
-      def build_general_data(xml)
-        xml['cbc'].UBLVersionID "2.0"
-        xml['cbc'].CustomizationID      invoice.customization_id
-        xml['cbc'].ID                   invoice.id
-        xml['cbc'].IssueDate            format_date(invoice.issue_date)
+      def build_payment_general_data(xml)        
         xml['cbc'].InvoiceTypeCode      invoice.invoice_type_code
         xml['cbc'].DocumentCurrencyCode invoice.document_currency_code
-      end
-      
-      def build_general_signature_information(xml)
-        xml['cac'].Signature do
-          xml['cbc'].ID 'IDSignKG' # id of the signature
-        end
-        
-        xml['cac'].SignatoryParty do
-          xml['cac'].PartyIdentification do
-            xml['cbc'].ID signature.party_id
-          end
-          xml['cac'].PartyName do
-            xml['cbc'].Name signature.party_name
-          end
-        end
-        
-        xml['cac'].DigitalSignatureAttachment do
-          xml['cac'].ExternalReference do
-            xml['cbc'].URI signature.uri
-          end
-        end
       end
     
       def additional_monetary_totals
@@ -258,6 +178,7 @@ module SUNAT
           end
         end
       end
+      
     end
   end
 end
