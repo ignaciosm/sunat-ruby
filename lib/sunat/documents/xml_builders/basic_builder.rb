@@ -13,9 +13,11 @@ module SUNAT
       UDT_NAMESPACE = 'urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2'
       XSI_NAMESPACE = 'http://www.w3.org/2001/XMLSchema-instance'
       
+      DATE_FORMAT = "%Y-%m-%d"
+      
       def initialize(document)
         self.document = document
-        self.signature = SUNAT::SIGNATURE # this is created in sunat/signature.r
+        self.signature = SUNAT::SIGNATURE # this is created in sunat/signature.rb
       end
       
       protected
