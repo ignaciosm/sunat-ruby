@@ -1,45 +1,36 @@
 module SUNAT
   module XMLBuilders    
     class PaymentDocumentBuilder < BasicBuilder
+            
+      QDT_NAMESPACE = 'urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2'
+      UDT_NAMESPACE = 'urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2'
+      CTC_NAMESPACE = 'urn:un:unece:uncefact:documentation:2'
       
-      C14N_ALGORITHM            = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
-      SIGNATURE_ALGORITHM       = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
-      TRANSFORMATION_ALGORITHM  = "http://www.w3.org/2000/09/xmldsig#enveloped- signature"
-      DIGEST_ALGORITHM          = "http://www.w3.org/2000/09/xmldsig#sha1"
+      ADDITIONAL_ROOT_ATTRIBUTES = {
+        'xmlns:ccts'  => CTC_NAMESPACE,
+        'xmlns:qdt'   => QDT_NAMESPACE,
+        'xmlns:udt'   => UDT_NAMESPACE
+      }
       
       alias_method :invoice, :document
       
-      def get_xml        
-        builder = xml_builder do |xml|
-          build_root xml, :Invoice do
-            build_ubl_extensions xml
-            build_general_data xml
-            build_general_signature_information xml
-            build_accounting_supplier_party xml
-            build_accounting_customer_party xml
-            build_tax_totals xml
-            build_legal_monetary_total xml
-            build_lines xml
-          end
+      def get_xml
+        make_xml :Invoice do |xml|
+          build_ubl_extensions xml
+          build_general_data xml
+          build_general_signature_information xml
+          build_accounting_supplier_party xml
+          build_accounting_customer_party xml
+          build_tax_totals xml
+          build_legal_monetary_total xml
+          build_lines xml
         end
-        
-        builder = add_soap_digital_signatures(builder)
-        
-        builder.to_xml
       end
       
       private
       
       def build_party_physical_location(xml, party)
         # implements if necesary.
-      end
-      
-      def signature_for(text)
-        signature.signature_for(text)
-      end
-      
-      def digest_for(text)
-        OpenSSL::Digest::SHA1.new.base64digest(text)
       end
       
       def build_lines(xml)
@@ -237,12 +228,6 @@ module SUNAT
         self.invoice.additional_properties
       end
     
-      def build_extension(xml, &block)
-        xml['ext'].UBLExtension do
-          xml['ext'].ExtensionContent(&block)
-        end
-      end
-    
       def build_additional_information_extension(xml)
         build_extension xml do
           xml['sac'].AdditionalInformation do
@@ -273,51 +258,6 @@ module SUNAT
           end
         end
       end
-    
-      def build_signature_signed_info(xml)
-        xml['ds'].SignedInfo do
-          xml['ds'].CanonicalizationMethod(Algorithm: C14N_ALGORITHM)
-          xml['ds'].SignatureMethod(Algorithm: SIGNATURE_ALGORITHM)
-          xml['ds'].Reference(URI: "")
-          xml['ds'].Transforms do
-            xml['ds'].Transform(Algorithm: TRANSFORMATION_ALGORITHM)
-          end
-          xml['ds'].DigestMethod(Algorithm: DIGEST_ALGORITHM)
-          xml['ds'].DigestValue '' # TODO: digest placeholder
-        end
-      end
-    
-      def build_signature_value(xml)
-        xml['ds'].SignatureValue '' # TODO: signature base64 encoded placeholder
-      end
-    
-      def build_signature_key_info(xml)
-        xml['ds'].KeyInfo do
-          xml['ds'].X509Data do
-            certificate = signature.certificate
-            xml['ds'].X509SubjectName certificate.issuer
-            xml['ds'].X509Certificate certificate.cert
-          end
-        end
-      end
-    
-      def build_signature_extension(xml)
-        build_extension xml do
-          xml['ds'].Signature(Id: signature.id) do
-            build_signature_signed_info(xml)
-            build_signature_value(xml)
-            build_signature_key_info(xml)
-          end
-        end
-      end
-    
-      def build_ubl_extensions(xml)
-        xml['ext'].UBLExtensions do
-          build_additional_information_extension(xml)
-          build_signature_extension(xml)
-        end
-      end
-      
     end
   end
 end

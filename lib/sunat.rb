@@ -53,6 +53,7 @@ require "sunat/documents/xml_builders/basic_builder"
 require "sunat/documents/xml_builders/payment_document_builder"
 require "sunat/documents/xml_builders/invoice_builder"
 require "sunat/documents/xml_builders/receipt_builder"
+require "sunat/documents/xml_builders/daily_receipt_summary_builder"
 
 module SUNAT
   # Your code goes here...

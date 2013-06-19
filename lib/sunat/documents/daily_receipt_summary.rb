@@ -19,5 +19,9 @@ module SUNAT
       self.notes = []
       self.lines = []
     end
+    
+    def xml_builder
+      @xml_builder ||= XMLBuilders::DailyReceiptSummaryBuilder.new(self)
+    end
   end
 end
