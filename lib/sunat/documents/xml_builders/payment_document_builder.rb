@@ -229,20 +229,12 @@ module SUNAT
         end
       end
     
-      # TODO: STUB
       def additional_monetary_totals
-        [
-          { id: 1001, currency: "PEN", amount: 348199.15 },
-          { id: 1003, currency: "PEN", amount: 12350.00 },
-          { id: 2005, currency: "PEN", amount: 59230.51 }
-        ]
+        self.invoice.additional_monetary_totals
       end
     
-      # TODO: STUB
       def additional_properties
-        [
-          { id: 1000, value: "CUATROCIENTOS VEINTITRES MIL DOSCIENTOS VEINTICINCO Y 00/100" }
-        ]
+        self.invoice.additional_properties
       end
     
       def build_extension(xml, &block)
@@ -256,14 +248,26 @@ module SUNAT
           xml['sac'].AdditionalInformation do
             additional_monetary_totals.each do |total|
               xml['sac'].AdditionalMonetaryTotal do
-                xml['cbc'].ID total[:id]
-                xml['cbc'].PayableAmount({currencyID: total[:currency]}, total[:amount])
+                xml['cbc'].ID total.id
+                if total.payable_amount.present?
+                  xml['cbc'].PayableAmount({currencyID: total.payable_amount.currency}, total.payable_amount.value)
+                end
+                if total.reference_amount.present?
+                  xml['sac'].ReferenceAmount({currencyID: total.reference_amount.currency}, total.reference_amount.value)
+                end
+                if total.total_amount.present?
+                  xml['sac'].TotalAmount({currencyID: total.total_amount.currency}, total.total_amount.value)
+                end
+                if total.percent.present?
+                  xml['cbc'].Percent total.percent
+                end
               end
             end
             additional_properties.each do |property|
               xml['sac'].AdditionalProperty do
-                xml['cbc'].ID property[:id]
-                xml['cbc'].Value property[:value]
+                xml['cbc'].ID property.id
+                xml['cbc'].Value property.value
+                xml['cbc'].Name property.name
               end
             end
           end

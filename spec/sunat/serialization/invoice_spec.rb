@@ -11,6 +11,15 @@ describe 'serialization of an invoice' do
       i.invoice_type_code       = "01"
       i.document_currency_code  = "PEN"
       
+      i.additional_monetary_totals << MonetaryTotal.new({
+        id: '1001',
+        payable_amount:   PaymentAmount.new(currency: 'PEN', value: 10000),
+        reference_amunt:  PaymentAmount.new(currency: 'PEN', value: 10000),
+        total_amount:     PaymentAmount.new(currency: 'PEN', value: 20000),
+      })
+      
+      i.add_additional_property(id: '200', value: 'COMPROBANTE DE PERCEPCION')
+      
       i.build_accounting_supplier_party do |asp|
         asp.account_id = "20100113612"
         asp.additional_account_id = "6"
@@ -131,5 +140,10 @@ describe 'serialization of an invoice' do
     date.count.should >= 0
     date.text.should eq(Date.today.strftime("%Y-%m-%d"))
   end
-
+  
+  it "should the payment amount be set in the xml body" do
+    payable_amount_tag = @xml.xpath("//sac:AdditionalMonetaryTotal/cbc:PayableAmount")
+    payable_amount_tag.count.should >= 0
+    payable_amount_tag.text.should eq(@invoice.additional_monetary_totals.first.payable_amount.value.to_s)
+  end
 end

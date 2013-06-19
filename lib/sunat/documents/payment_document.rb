@@ -9,15 +9,21 @@ module SUNAT
   end
   
   class AdditionalProperty
-    property :id,   String
-    property :name, String
+    include Model
+    
+    property :id,     String
+    property :name,   String
+    property :value,  String
   end
   
   class MonetaryTotal
     include Model
     
-    property :id,             String
-    property :payable_amount, PaymentAmount
+    property :id,               String
+    property :payable_amount,   PaymentAmount
+    property :reference_amount, PaymentAmount
+    property :total_amount,     PaymentAmount
+    property :percent,          Float    
   end
   
   module PaymentDocument
@@ -49,18 +55,9 @@ module SUNAT
           self.tax_totals = []
           self.depatch_document_references = []
           self.additional_document_references = []
-          self.monetary_totals = []
+          self.additional_monetary_totals = []
+          self.additional_properties = []
           self.invoice_type_code = self.class::DOCUMENT_TYPE_CODE
-        end
-        
-        def add_monetary_total(id, currency, value)
-          self.monetary_totals << MonetaryTotal.new.tap do |total|
-            total.id = id
-            total.payable_amount = PaymentAmount.new.tap do |amount|
-              amount.currency = currency
-              amount.value    = value
-            end
-          end
         end
         
         def add_additional_property(options)
