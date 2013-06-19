@@ -3,10 +3,10 @@ require 'spec_helper'
 # for more succinct calls
 include SUNAT
 
-describe 'serialization of an invoice' do
+describe 'serialization of a paystub' do
   
   before :all do
-    @invoice = Invoice.build do |i|
+    @paystub = Paystub.build do |i|
       i.id                      = "F002-10"
       i.invoice_type_code       = "01"
       i.document_currency_code  = "PEN"
@@ -122,10 +122,12 @@ describe 'serialization of an invoice' do
         end
       end
     end
+    
+    @xml = Nokogiri::XML(@paystub.to_xml)
   end
   
   it "should do nothing" do
-    puts @invoice.to_xml
+    
   end
 
 end

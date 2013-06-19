@@ -1,17 +1,24 @@
 require 'spec_helper'
 
 describe  do
+  include SpecHelpers
+  
   let :accounting_party do
     SUNAT::AccountingParty.new
   end
   
-  describe "validations" do    
+  describe "validations" do
+    let(:invalid_code) { "124" }
+    let(:valid_code) { ActiveModel::Validations::DocumentTypeCodeValidator::VALID_CODES.sample }
+    
     it "should validate that the account_id needs to have 11 characters" do
-      accounting_party.valid?.should eq(false)
-      accounting_party.account_id = "1" * 5
-      accounting_party.valid?.should eq(false)
-      accounting_party.account_id = "1" * 11
-      accounting_party.valid?.should eq(true)
+      expect_invalid  accounting_party, :account_id, "1" * 5
+      expect_valid    accounting_party, :account_id, "1" * 11
+    end
+    
+    it "should validate that the additional_account_id is a valid document type code" do
+      expect_invalid accounting_party,  :additional_account_id, invalid_code
+      expect_valid accounting_party,    :additional_account_id, valid_code
     end
   end
   

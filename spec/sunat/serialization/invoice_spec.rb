@@ -6,7 +6,7 @@ include SUNAT
 describe 'serialization of an invoice' do
   
   before :all do
-    @paystub = Paystub.build do |i|
+    @invoice = Invoice.build do |i|
       i.id                      = "F002-10"
       i.invoice_type_code       = "01"
       i.document_currency_code  = "PEN"
@@ -122,10 +122,14 @@ describe 'serialization of an invoice' do
         end
       end
     end
+    
+    @xml = Nokogiri::XML(@invoice.to_xml)
   end
   
-  it "should do nothing" do
-    puts @paystub.to_xml
+  it "should create a //cbc:IssueDate tag with the the current date formatted as %Y-%m-%d" do
+    date = @xml.xpath("//cbc:IssueDate")
+    date.count.should >= 0
+    date.text.should eq(Date.today.strftime("%Y-%m-%d"))
   end
 
 end

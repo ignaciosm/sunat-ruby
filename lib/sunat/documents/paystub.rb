@@ -8,6 +8,8 @@ module SUNAT
   class Paystub < Document
     extend PaymentDocument
     
+    DOCUMENT_TYPE_CODE = PaymentDocument::PAYSTUB
+    
     # All the paystub structure is identical
     # to the invoice's one. All the structure
     # is inherited from PaymentDocument

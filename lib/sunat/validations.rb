@@ -59,6 +59,48 @@ module ActiveModel
       end
     end
     
+    # Tax Document Type Code Validator (Document Type Valid for Taxes)
+    class TaxDocumentTypeCodeValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        return if value.nil?
+        if value.size != 2 || value =~ /[a-zA-Z]/
+          record.errors[attribute] << (options[:message] || "is not a valid invoice type code")
+        end
+      end
+    end
+    
+    # Tax Type Code Validator
+    # follows http://www.unece.org/trade/untdid/d07a/tred/tred5153.htm
+    class TaxTypeCodeValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        return if value.nil?
+        unless value =~ /[A-Za-z]{3}/
+          record.errors[attribute] << (options[:message] || "is not a valid tax type code")
+        end
+      end
+    end
+    
+    # Document Type Code Validator (Documents)
+    class DocumentTypeCodeValidator < ActiveModel::EachValidator
+      VALID_CODES_HASH = {
+        '0' => 'DOC.TRIB.NO.DOM.SIN.RUC',
+        '1' => 'DOC. NACIONAL DE IDENTIDAD',
+        '4' => 'CARNET DE EXTRANJERIA',
+        '6' => 'REG. UNICO DE CONTRIBUYENTES',
+        '7' => 'PASAPORTE',
+        'A' => 'CED. DIPLOMATICA DE IDENTIDAD'
+      }
+      
+      VALID_CODES = VALID_CODES_HASH.keys
+      
+      def validate_each(record, attribute, value)
+        return if value.nil?
+        if VALID_CODES.exclude?(value)
+          record.errors[attribute] << (options[:message] || "is not a valid document type code")
+        end
+      end
+    end
+    
     # Currency Code Validator
     class CurrencyCodeValidator < ActiveModel::EachValidator
       CURRENCY_CODE_LENGTH = 3

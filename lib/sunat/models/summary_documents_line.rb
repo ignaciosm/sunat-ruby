@@ -7,7 +7,7 @@ module SUNAT
     property :serial_id,          String
     property :start_id,           String
     property :end_id,             String
-    property :document_type_code, String # TODO: Range in Catalog # 01
+    property :document_type_code, String
     property :total_amount,       PaymentAmount
     property :billing_payments,   [BillingPayment]
     property :allowance_charges,  [AllowanceCharge]
@@ -16,6 +16,8 @@ module SUNAT
     [:line_id, :serial_id, :start_id, :end_id].each do |field|
       validates field, existence: true, presence: true
     end
+    
+    validates :document_type_code, tax_document_type_code: true
     
     def initialize
       self.billing_payments = []

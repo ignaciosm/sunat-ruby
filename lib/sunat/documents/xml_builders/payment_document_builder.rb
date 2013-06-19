@@ -215,7 +215,7 @@ module SUNAT
         
         xml['cac'].SignatoryParty do
           xml['cac'].PartyIdentification do
-            xml['cbc'].Id signature.party_id
+            xml['cbc'].ID signature.party_id
           end
           xml['cac'].PartyName do
             xml['cbc'].Name signature.party_name

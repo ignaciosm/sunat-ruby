@@ -4,10 +4,11 @@ module SUNAT
     include Model
     
     property :account_id,             String
-    property :additional_account_id,  String # TODO: Range in Catalog # 01
+    property :additional_account_id,  String
     property :party,                  Party
     
     validates :account_id, existence: true, presence: true, ruc_document: true
+    validates :additional_account_id, existence: true, document_type_code: true
     
     def build_party_with_name(name)
       self.party = Party.new.tap do |party|
