@@ -1,12 +1,14 @@
 module SUNAT
   class BaseBuilder
     
+    XML_NAMESPACE       = 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'
     DS_NAMESPACE        = 'http://www.w3.org/2000/09/xmldsig#'
     CAC_NAMESPACE       = 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2'
     CBC_NAMESPACE       = 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2'
     EXT_NAMESPACE       = 'urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2'
     SAC_NAMESPACE       = 'urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAggregateComponents-1'
     XSI_NAMESPACE       = 'http://www.w3.org/2001/XMLSchema-instance'
+    
     XSI_SCHEMA_LOCATION = 'urn:sunat:names:specification:ubl:peru:schema:xsd:InvoiceSummary-1 D:\UBL_SUNAT\SUNAT_xml_20110112\20110112\xsd\maindoc\UBLPE-InvoiceSummary-1.0.xsd'
     
     C14N_ALGORITHM            = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
@@ -26,6 +28,11 @@ module SUNAT
       builder.build(&block)
     end
     
+    # We build the document with a root name
+    # The signature here is for two reasons:
+    #   1. easy call of the global SUNAT::SIGNATURE
+    #   2. dependency injection of a signature in a test
+    # 
     attr_accessor :root_name, :document, :signature
     
     def initialize
@@ -59,7 +66,7 @@ module SUNAT
     
     def build_root(xml, &block)
       attributes = {
-        'xmlns'               => 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
+        'xmlns'               => XML_NAMESPACE,
         'xmlns:cac'           => CAC_NAMESPACE,
         'xmlns:cbc'           => CBC_NAMESPACE,
         'xmlns:ds'            => DS_NAMESPACE,
@@ -68,7 +75,7 @@ module SUNAT
         'xmlns:xsi'           => XSI_NAMESPACE,
         'xsi:schemaLocation'  => XSI_SCHEMA_LOCATION
       }
-      xml.send(root_name, attributes, &block)
+      xml.send(self.root_name, attributes, &block)
     end
     
     def build_general_data(xml)
@@ -78,7 +85,7 @@ module SUNAT
       xml['cbc'].IssueDate            format_date(document.issue_date)
     end
     
-    def build_ubl_extensions(xml)        
+    def build_ubl_extensions(xml)   
       xml['ext'].UBLExtensions do
         build_additional_information_extension xml
         build_signature_extension xml
@@ -139,6 +146,7 @@ module SUNAT
     def build_additional_information_extension(xml)
       build_extension xml do
         xml['sac'].AdditionalInformation do
+          
           additional_monetary_totals.each do |additional_monetary_total|
             additional_monetary_total.build_xml xml
           end
