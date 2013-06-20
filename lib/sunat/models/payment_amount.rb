@@ -6,6 +6,7 @@ module SUNAT
     # Money amounts always in lowest common denominator, so integer only!
     property :value,    Integer
     property :currency, String
+    # in the xml, the currency must me in the format: [0-9]+.[0-9]{2}
     
     validates :currency, currency_code: true
     
