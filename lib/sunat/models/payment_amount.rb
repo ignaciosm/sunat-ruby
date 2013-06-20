@@ -7,7 +7,11 @@ module SUNAT
     property :value,    Integer
     property :currency, String
     
-    validates :currency, currency_code: true 
+    validates :currency, currency_code: true
+    
+    def build_xml(xml, tag_name)
+      xml['cbc'].send(tag_name, { currencyId: currency }, value)
+    end
   end
 
 end

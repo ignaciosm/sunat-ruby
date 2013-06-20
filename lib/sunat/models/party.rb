@@ -1,11 +1,5 @@
 module SUNAT
   
-  class PhysicalLocation
-    include Model
-    
-    property :description, String
-  end
-  
   class Party
     include Model
     
@@ -20,6 +14,28 @@ module SUNAT
     def initialize
       self.party_legal_entities = []
       self.postal_addresses = []
+    end
+    
+    def build_xml(xml)
+      xml['cac'].Party do
+        if name.present?
+          xml['cac'].PartyName do
+            xml['cbc'].Name name
+          end
+        end
+        
+        postal_addresses.each do |address|
+          address.build_xml xml
+        end
+        
+        party_legal_entities.each do |entity|
+          entity.build_xml xml
+        end
+        
+        if physical_location.present?
+          physical_location.build_xml xml
+        end
+      end
     end
   end
 end

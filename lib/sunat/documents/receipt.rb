@@ -8,14 +8,6 @@ module SUNAT
   class Receipt < Document
     extend PaymentDocument
     
-    DOCUMENT_TYPE_CODE = PaymentDocument::PAYSTUB
-    
-    # All the receipt's structure is identical
-    # to the invoice's one. All the structure
-    # is inherited from PaymentDocument
-    
-    def xml_builder
-      @xml_builder ||= XMLBuilders::ReceiptBuilder.new(self)
-    end
+    DOCUMENT_TYPE_CODE = '03' # sunat code in catalog #1
   end
 end

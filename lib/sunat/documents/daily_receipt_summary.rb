@@ -21,8 +21,18 @@ module SUNAT
       self.lines = []
     end
     
-    def xml_builder
-      @xml_builder ||= XMLBuilders::DailyReceiptSummaryBuilder.new(self)
+    def to_xml
+      BaseBuilder.build(self, :SummaryDocuments) do |builder, xml|
+        notes.each do |note|
+          xml['cbc'].Note note
+        end
+        
+        accounting_supplier.build_xml xml, :AccountingSupplierParty
+        
+        lines.each do |line|
+          line.build_xml xml
+        end
+      end
     end
   end
 end

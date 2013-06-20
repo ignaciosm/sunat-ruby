@@ -29,28 +29,26 @@ module SUNAT
         self.private_key.sign(OpenSSL::Digest::SHA1.new, text)
       )
     end
+    
+    def to_xml(xml)
+      xml['cac'].Signature do
+        xml['cbc'].ID id
+      
+        xml['cac'].SignatoryParty do
+          xml['cac'].PartyIdentification do
+            xml['cbc'].ID party_id
+          end
+          xml['cac'].PartyName do
+            xml['cbc'].Name party_name
+          end
+        end
+      
+        xml['cac'].DigitalSignatureAttachment do
+          xml['cac'].ExternalReference do
+            xml['cbc'].URI uri
+          end
+        end
+      end
+    end
   end
-end
-
-# The Default Signature and Certificate is initially empty
-SUNAT::SIGNATURE = SUNAT::Signature.new
-
-# A method to allow override the default signature and certificate
-def SUNAT.configure_signature
-  yield SUNAT::SIGNATURE
-end
-
-# And we use this method to configure the signature
-# TODO: FULL OF STUBS
-SUNAT.configure_signature do |s|
-  s.id          = "2010945"
-  s.party_id    = "20100454523"
-  s.party_name  = "SOPORTE TECNOLOGICO EIRL"
-  s.uri         = "#SignST"
-  
-  cert_data = File.read(File.join(Dir.pwd, 'spec', 'sunat', 'support', 'test.crt'))
-  s.build_certificate(cert_data)
-  
-  pk_data = File.read(File.join(Dir.pwd, 'spec', 'sunat', 'support', 'test.key'))
-  s.build_private_key(pk_data)
 end

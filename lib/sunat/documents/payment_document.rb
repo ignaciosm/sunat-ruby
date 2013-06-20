@@ -1,36 +1,6 @@
-module SUNAT
-  class ReferralGuideline < DocumentReference
-    DOCUMENT_CODE = '09' # referral guideline
-    
-    def initialize
-      super
-      self.document_type_code = DOCUMENT_CODE
-    end
-  end
-  
-  class AdditionalProperty
-    include Model
-    
-    property :id,     String
-    property :name,   String
-    property :value,  String
-  end
-  
-  class MonetaryTotal
-    include Model
-    
-    property :id,               String
-    property :payable_amount,   PaymentAmount
-    property :reference_amount, PaymentAmount
-    property :total_amount,     PaymentAmount
-    property :percent,          Float    
-  end
-  
+module SUNAT  
   module PaymentDocument
-    
-    INVOICE = '01'
-    PAYSTUB = '03'
-    
+        
     def self.extended(base)      
       base.property :id,                              String # serie + correlative number
       base.property :invoice_type_code,               String
@@ -42,8 +12,6 @@ module SUNAT
       base.property :depatch_document_references,     [ReferralGuideline] # spanish: Guías de remisión
       base.property :additional_document_references,  [DocumentReference]
       base.property :tax_totals,                      [TaxTotal]
-      base.property :additional_monetary_totals,      [MonetaryTotal]
-      base.property :additional_properties,           [AdditionalProperty]
       
       base.validates :document_currency_code, existence: true, currency_code: true
       base.validates :invoice_type_code, tax_document_type_code: true
@@ -60,18 +28,30 @@ module SUNAT
           self.invoice_type_code = self.class::DOCUMENT_TYPE_CODE
         end
         
-        def add_additional_property(options)
-          id = options[:id]
-          name = options[:name]
-          value = options[:value]
-          
-          self.additional_properties << AdditionalProperty.new.tap do |property|
-            property.id = id        if id
-            property.name = name    if name
-            property.value = value  if value
+        def to_xml
+          BaseBuilder.build(self, :Invoice) do |builder, xml|
+            xml['cbc'].InvoiceTypeCode      invoice_type_code
+            xml['cbc'].DocumentCurrencyCode document_currency_code
+            
+            accounting_supplier_party.build_xml xml, :AccountingSupplierParty
+            accounting_customer_party.build_xml xml, :AccountingCustomerParty
+            
+            tax_totals.each do |total|
+              total.build_xml xml
+            end     
+            
+            if legal_monetary_total.present?
+              xml['cac'].LegalMonetaryTotal do
+                legal_monetary_total.build xml, :PayableAmount
+              end
+            end
+            
+            invoice_lines.each do |invoice_line|
+              invoice_line.build_xml xml
+            end
           end
         end
-        
+
       end
     end
   end

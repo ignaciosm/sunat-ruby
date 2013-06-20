@@ -25,5 +25,14 @@ module SUNAT
         end
       end
     end
+    
+    def build_xml(xml, tag_name)
+      xml['cac'].send tag_name do        
+        xml['cbc'].CustomerAssignedAccountID  account_id
+        xml['cbc'].AdditionalAccountID        additional_account_id
+        
+        party.build_xml xml
+      end
+    end
   end
 end

@@ -1,19 +1,4 @@
-module SUNAT
-  
-  class AlternativeConditionPrice
-    include Model
-    
-    PRICE_TYPES_HASH = {
-      '01' => 'Precio Unitario.',
-      '02' => 'Valor referencial unitario en operaciones no onerosas.'
-    }
-    
-    property :price_amount, PaymentAmount
-    property :price_type,   String
-    
-    validates :price_type, inclusion: { in: PRICE_TYPES_HASH.keys }
-  end
-  
+module SUNAT  
   class PriceReference
     include Model
     
@@ -22,5 +7,14 @@ module SUNAT
     def initialize
       self.alternative_condition_prices = []
     end
+    
+    def build_xml(xml)
+      xml['cac'].PricingReference do
+        alternative_condition_prices.each do |alternative_condition_price|
+          alternative_condition_price.build_xml xml
+        end
+      end
+    end
+    
   end
 end

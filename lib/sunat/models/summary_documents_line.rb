@@ -24,6 +24,30 @@ module SUNAT
       self.allowance_charges = []
       self.tax_totals = []
     end
+    
+    def build_xml(xml)
+      xml['sac'].SummaryDocumentsLine do
+        xml['cbc'].LineID                 line_id
+        xml['cbc'].DocumentTypeCode       document_type_code
+        xml['sac'].DocumentSerialID       serial_id
+        xml['sac'].StartDocumentNumberID  start_id
+        xml['sac'].EndDocumentNumberID    end_id
+        
+        tax_totals.each do |total|
+          total.build_xml xml
+        end
+        
+        allowance_charges.each do |charge|
+          charge.build_xml xml
+        end
+        
+        billing_payments.each do |billing_payment|
+          billing_payment.build_xml xml
+        end
+      end
+    end
+    
+    
   end
 
 end
