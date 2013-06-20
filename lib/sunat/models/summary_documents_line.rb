@@ -22,6 +22,7 @@ module SUNAT
     def initialize
       self.billing_payments = []
       self.allowance_charges = []
+      self.tax_totals = []
     end
   end
 

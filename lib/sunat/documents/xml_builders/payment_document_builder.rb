@@ -94,47 +94,6 @@ module SUNAT
         end
       end
       
-      def build_money(xml, namespace, tag_name, money)
-        xml[namespace].send(tag_name, { currencyID: money.currency }, money.value)
-      end
-      
-      def build_total(xml, namespace, tag_name, total)
-        xml[namespace].send(tag_name) do
-          build_money xml, 'cbc', :TaxAmount, total.tax_amount
-        end
-        
-        sub_totals = total.sub_totals
-        
-        if sub_totals.any?
-          sub_totals.each do |sub_total|
-            xml['cac'].TaxSubTotal do
-              build_money(xml, 'cbc', :TaxAmount, sub_total.tax_amount)
-              
-              category = sub_total.tax_category
-              
-              xml['cac'].TaxCategory do
-                scheme = category.tax_scheme
-                
-                xml['cbc'].TaxExemptionReasonCode(category.tax_exemption_reason_code) if category.tax_exemption_reason_code
-                xml['cbc'].TierRange(category.tier_range) if category.tier_range
-                
-                xml['cac'].TaxScheme do
-                  xml['cbc'].ID           scheme.id
-                  xml['cbc'].Name         scheme.name
-                  xml['cbc'].TaxTypeCode  scheme.tax_type_code
-                end
-              end
-            end
-          end
-        end
-      end
-      
-      def build_tax_totals(xml, totals = invoice.tax_totals)
-        totals.each do |total|
-          build_total xml, 'cac', :TaxTotal, total
-        end
-      end
-      
       def build_payment_general_data(xml)        
         xml['cbc'].InvoiceTypeCode      invoice.invoice_type_code
         xml['cbc'].DocumentCurrencyCode invoice.document_currency_code
