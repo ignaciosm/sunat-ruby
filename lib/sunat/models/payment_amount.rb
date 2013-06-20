@@ -13,5 +13,4 @@ module SUNAT
       xml['cbc'].send(tag_name, { currencyId: currency }, value)
     end
   end
-
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe  do
-  include SpecHelpers
+describe do
+  include ValidationSpecHelpers
   
   let :accounting_party do
     SUNAT::AccountingParty.new

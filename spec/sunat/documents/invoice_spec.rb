@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe SUNAT::Invoice do
-  include SpecHelpers
+  include ValidationSpecHelpers
   
   let :invoice do
     SUNAT::Invoice.new
