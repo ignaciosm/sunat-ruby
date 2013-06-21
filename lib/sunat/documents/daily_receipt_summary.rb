@@ -22,7 +22,7 @@ module SUNAT
     end
     
     def to_xml
-      BaseBuilder.build(self, :SummaryDocuments) do |builder, xml|
+      super :SummaryDocuments do |xml|
         notes.each do |note|
           xml['cbc'].Note note
         end

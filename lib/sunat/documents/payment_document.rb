@@ -29,7 +29,7 @@ module SUNAT
         end
         
         def to_xml
-          BaseBuilder.build(self, :Invoice) do |builder, xml|
+          super :Invoice do |xml|
             xml['cbc'].InvoiceTypeCode      invoice_type_code
             xml['cbc'].DocumentCurrencyCode document_currency_code
             
@@ -38,7 +38,7 @@ module SUNAT
             
             tax_totals.each do |total|
               total.build_xml xml
-            end     
+            end
             
             if legal_monetary_total.present?
               xml['cac'].LegalMonetaryTotal do
@@ -48,7 +48,7 @@ module SUNAT
             
             invoice_lines.each do |invoice_line|
               invoice_line.build_xml xml
-            end
+            end            
           end
         end
 

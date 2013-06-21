@@ -34,5 +34,13 @@ module SUNAT
         property.value = value  if value
       end
     end
+    
+    protected
+    
+    def to_xml(root_name, &block)
+      BaseBuilder.build(self, root_name) do |builder, xml|
+        block.call(xml)
+      end
+    end
   end
 end

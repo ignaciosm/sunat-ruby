@@ -31,7 +31,7 @@ module SUNAT
     # We build the document with a root name
     # The signature here is for two reasons:
     #   1. easy call of the global SUNAT::SIGNATURE
-    #   2. dependency injection of a signature in a test
+    #   2. possible dependency injection of a signature in a test
     # 
     attr_accessor :root_name, :document, :signature
     
@@ -167,19 +167,28 @@ module SUNAT
       # digest.content = digest_for(text)
       # TODO: I don't know WHAT i should digest
 
-      # Prepare the SignedInfo for the signature
-      signed_info = doc.xpath('//ds:SignedInfo', 'ds' => DS_NAMESPACE).first
-      
-      if signed_info.present?
-        canon = signed_info.canonicalize(Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0, ['soap', 'web'])
+      find_signed_info(doc) do |signed_info|
+        canon = canonicalize(signed_info)
         # Add the signature to the document
         signed_value = doc.xpath('//ds:SignatureValue', 'ds' => DS_NAMESPACE).first
         signed_value.content = signature_for(canon)
-      else
-        warn 'there is no SignedInfo in this xml to put the signature.'
       end
 
       doc
+    end
+    
+    def find_signed_info(doc, &block)
+      # Prepare the SignedInfo for the signature
+      signed_info = doc.xpath('//ds:SignedInfo', 'ds' => DS_NAMESPACE).first
+      if signed_info.present?
+        block.call(signed_info)
+      else
+        warn 'there is no SignedInfo in this xml to put the signature.'
+      end
+    end
+    
+    def canonicalize(signed_info)
+      signed_info.canonicalize(Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0, ['soap', 'web'])
     end
     
     def signature_for(text)
