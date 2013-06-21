@@ -6,6 +6,8 @@ module SUNAT
   
   class DailyReceiptSummary < Document
     
+    xml_root :SummaryDocuments
+    
     property :id,                   String
     property :reference_date,       Date
     property :accounting_supplier,  AccountingParty
@@ -14,8 +16,6 @@ module SUNAT
     
     validates :accounting_supplier, existence: true
     validates :lines, not_empty: true
-    
-    xml_root :SummaryDocuments
     
     def initialize
       super
