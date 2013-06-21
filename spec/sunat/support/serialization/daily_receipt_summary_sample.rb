@@ -1,5 +1,4 @@
 DailyReceiptSummary.new.tap do |s|
-  s.id              = "RC-20120624-001"
   s.reference_date  = Date.strptime("2012-06-23", "%Y-%m-%d")
   s.notes           = ["nota 1", "nota 2", "nota3"]
   

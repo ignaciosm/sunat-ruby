@@ -19,8 +19,9 @@ module SUNAT
     
     def initialize
       super
-      self.notes = []
-      self.lines = []
+      self.notes  ||= []
+      self.lines  ||= []
+      self.id     ||= default_id
     end
     
     def to_xml
@@ -36,5 +37,13 @@ module SUNAT
         end
       end
     end
+    
+    private
+    
+    def default_id
+      plain_date = Date.today.strftime("%Y%m%d")
+      "RC-#{plain_date}"
+    end
+    
   end
 end
