@@ -1,7 +1,9 @@
 module SUNAT  
   module PaymentDocument
         
-    def self.extended(base)      
+    def self.extended(base)
+      base.xml_root :Invoice
+                
       base.property :id,                              String # serie + correlative number
       base.property :invoice_type_code,               String
       base.property :document_currency_code,          String

@@ -1,5 +1,8 @@
+require 'delegate'
+
 module SUNAT
-  class BaseBuilder
+  # decorator for XMLDocuments
+  class XMLDocument < SimpleDelegator
     
     XML_NAMESPACE       = 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'
     DS_NAMESPACE        = 'http://www.w3.org/2000/09/xmldsig#'
@@ -21,37 +24,24 @@ module SUNAT
     CUSTOMIZATION_ID = "1.0"
     UBL_VERSION_ID = "2.0"
     
-    def self.build(document, root_name, &block)
-      builder = self.new
-      builder.root_name = root_name
-      builder.document = document
-      builder.build(&block)
-    end
-    
-    # We build the document with a root name
     # The signature here is for two reasons:
     #   1. easy call of the global SUNAT::SIGNATURE
-    #   2. possible dependency injection of a signature in a test
+    #   2. possible dependency injection of a signature in a test vía stubs
     # 
-    attr_accessor :root_name, :document, :signature
-    
-    def initialize
-      self.signature = SUNAT::SIGNATURE
+    def signature
+      SUNAT::SIGNATURE
     end
     
-    def build(&block)
-      builder = Nokogiri::XML::Builder.with(declaration) do |xml|
-        build_root xml do
-          build_ubl_extensions xml
-          build_general_data xml
-          signature.to_xml xml
-          
-          block.call self, xml
-        end
-      end
+    def build_basic_xml(&block)
+      make_basic_builder do |xml|
+        build_ubl_extensions xml
+        build_general_data xml
+        signature.xml_metadata xml
+        
+        block.call xml
+      end.to_xml
       
-      builder = add_soap_digital_signatures(builder)
-      builder.to_xml
+      # builder = add_soap_digital_signatures(builder)
     end
     
     private
@@ -75,20 +65,27 @@ module SUNAT
         'xmlns:xsi'           => XSI_NAMESPACE,
         'xsi:schemaLocation'  => XSI_SCHEMA_LOCATION
       }
-      xml.send(self.root_name, attributes, &block)
+      # self.xml_root comes from the document being decorated
+      xml.send(self.xml_root, attributes, &block)
+    end
+    
+    def make_basic_builder(&block)
+      Nokogiri::XML::Builder.with(declaration) do |xml|
+        build_root xml, &block
+      end
     end
     
     def build_general_data(xml)
       xml['cbc'].UBLVersionID         UBL_VERSION_ID
       xml['cbc'].CustomizationID      CUSTOMIZATION_ID
-      xml['cbc'].ID                   document.id
-      xml['cbc'].IssueDate            format_date(document.issue_date)
+      xml['cbc'].ID                   self.id
+      xml['cbc'].IssueDate            format_date(self.issue_date)
     end
     
-    def build_ubl_extensions(xml)   
+    def build_ubl_extensions(xml)
       xml['ext'].UBLExtensions do
         build_additional_information_extension xml
-        build_signature_extension xml
+        build_signature_placeholder_extension xml
       end
     end
     
@@ -96,6 +93,23 @@ module SUNAT
       xml['ext'].UBLExtension do
         xml['ext'].ExtensionContent(&block)
       end
+    end
+    
+    def build_additional_information_extension(xml)      
+      build_extension xml do
+        xml['sac'].AdditionalInformation do
+          self.additional_monetary_totals.each do |additional_monetary_total|
+            additional_monetary_total.build_xml xml
+          end
+          self.additional_properties.each do |property|
+            property.build_xml xml
+          end
+        end
+      end
+    end
+    
+    def build_signature_placeholder_extension(xml)
+      build_extension xml
     end
   
     def build_signature_signed_info(xml)
@@ -110,21 +124,7 @@ module SUNAT
         xml['ds'].DigestValue '' # TODO: digest placeholder
       end
     end
-  
-    def build_signature_value(xml)
-      xml['ds'].SignatureValue '' # TODO: signature base64 encoded placeholder
-    end
-  
-    def build_signature_key_info(xml)
-      xml['ds'].KeyInfo do
-        xml['ds'].X509Data do
-          certificate = signature.certificate
-          xml['ds'].X509SubjectName certificate.issuer
-          xml['ds'].X509Certificate certificate.cert
-        end
-      end
-    end
-  
+    
     def build_signature_extension(xml)
       build_extension xml do
         xml['ds'].Signature(Id: signature.id) do
@@ -134,25 +134,17 @@ module SUNAT
         end
       end
     end
-    
-    def additional_monetary_totals
-      self.document.additional_monetary_totals
+  
+    def build_signature_value(xml)
+      xml['ds'].SignatureValue '' # PLACEHOLDER: signature base64 encoded placeholder
     end
   
-    def additional_properties
-      self.document.additional_properties
-    end
-    
-    def build_additional_information_extension(xml)
-      build_extension xml do
-        xml['sac'].AdditionalInformation do
-          
-          additional_monetary_totals.each do |additional_monetary_total|
-            additional_monetary_total.build_xml xml
-          end
-          additional_properties.each do |property|
-            property.build_xml xml
-          end
+    def build_signature_key_info(xml)
+      xml['ds'].KeyInfo do
+        xml['ds'].X509Data do
+          certificate = signature.certificate
+          xml['ds'].X509SubjectName certificate.issuer
+          xml['ds'].X509Certificate certificate.cert
         end
       end
     end

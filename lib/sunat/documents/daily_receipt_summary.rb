@@ -15,6 +15,8 @@ module SUNAT
     validates :accounting_supplier, existence: true
     validates :lines, not_empty: true
     
+    xml_root :SummaryDocuments
+    
     def initialize
       super
       self.notes = []

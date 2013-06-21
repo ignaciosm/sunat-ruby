@@ -58,7 +58,7 @@ require "sunat/documents/invoice"
 require "sunat/documents/receipt"
 require "sunat/signature"
 require "sunat/signature_config"
-require "sunat/documents/base_builder"
+require "sunat/documents/xml_document"
 
 module SUNAT
   # Your code goes here...

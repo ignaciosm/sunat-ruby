@@ -12,6 +12,12 @@ module SUNAT
     property :additional_monetary_totals, [MonetaryTotal]
     property :additional_properties,      [AdditionalProperty]
     
+    def self.xml_root(root_name)
+      define_method :xml_root do
+        root_name
+      end
+    end
+    
     def initialize
       super
       self.issue_date = Date.today
@@ -38,8 +44,10 @@ module SUNAT
     protected
     
     def to_xml(root_name, &block)
-      BaseBuilder.build(self, root_name) do |builder, xml|
-        block.call(xml)
+      # Auto-decorate
+      xml_document = XMLDocument.new(self)
+      xml_document.build_basic_xml do |xml|
+        block.call(xml) if block.present?
       end
     end
   end

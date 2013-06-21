@@ -30,7 +30,7 @@ module SUNAT
       )
     end
     
-    def to_xml(xml)
+    def xml_metadata(xml)
       xml['cac'].Signature do
         xml['cbc'].ID id
       
