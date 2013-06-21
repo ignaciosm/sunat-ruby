@@ -1,20 +1,34 @@
 module SUNAT
   class XMLSigner < SimpleDelegator
+    
+    C14N_ALGORITHM            = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+    DIGEST_ALGORITHM          = "http://www.w3.org/2000/09/xmldsig#sha1"
+    SIGNATURE_ALGORITHM       = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
+    TRANSFORMATION_ALGORITHM  = "http://www.w3.org/2000/09/xmldsig#enveloped- signature"
+    
+    # decorator for XMLDocuments
     def sign(xml_string)
-      unsigned_document = build_from_xml(xml_string)
+      digested_document = digest_for(xml_string)
+      document          = build_from_xml(xml_string)
       
-      search_signature_location(unsigned_document) do |location|
-        # location
+      search_signature_location(document) do |signature_location|
+        # We built a basic_builder to get the namespaces
+        # and use build_signature_extension as we were inside a builder
+        doc = make_basic_builder do |xml|
+          build_signature_extension xml, digested_document
+        end.doc
+        
+        signature = doc.xpath("//ds:Signature")
+        signature_location.add_child(signature)
       end
       
-      xml_string
-      # builder = add_soap_digital_signatures(builder)
+      document.to_xml
     end
     
     private
     
     def search_signature_location(document, &block)
-      element = document.xpath("//ext:ExtensionContent[not(node())]").first
+      element = document.xpath("//ext:ExtensionContent[not(node())]", 'ext' => XMLDocument::EXT_NAMESPACE).first
       if element.present?
         block.call(element)
       else
@@ -22,19 +36,15 @@ module SUNAT
       end
     end
     
-    # old
-    
-    def build_signature_extension(xml)
-      build_extension xml do
-        xml['ds'].Signature(Id: signature.id) do
-          build_signature_signed_info(xml)
-          build_signature_value(xml)
-          build_signature_key_info(xml)
-        end
+    def build_signature_extension(xml, digested_document)
+      xml['ds'].Signature(Id: signature.id) do
+        build_signature_signed_info xml, digested_document
+        build_signature_value       xml
+        build_signature_key_info    xml
       end
     end
 
-    def build_signature_signed_info(xml)
+    def build_signature_signed_info(xml, digested_document)
       xml['ds'].SignedInfo do
         xml['ds'].CanonicalizationMethod(Algorithm: C14N_ALGORITHM)
         xml['ds'].SignatureMethod(Algorithm: SIGNATURE_ALGORITHM)
@@ -43,12 +53,15 @@ module SUNAT
           xml['ds'].Transform(Algorithm: TRANSFORMATION_ALGORITHM)
         end
         xml['ds'].DigestMethod(Algorithm: DIGEST_ALGORITHM)
-        xml['ds'].DigestValue '' # TODO: digest placeholder
+        xml['ds'].DigestValue(digested_document)
       end
     end
 
     def build_signature_value(xml)
-      xml['ds'].SignatureValue '' # PLACEHOLDER: signature base64 encoded placeholder
+      find_signed_info(xml.doc) do |signed_info|
+        canon = canonicalize(signed_info)
+        xml['ds'].SignatureValue signature_for(canon)
+      end
     end
 
     def build_signature_key_info(xml)
@@ -61,29 +74,9 @@ module SUNAT
       end
     end
 
-    def add_soap_digital_signatures(xml)
-      # To get round silly namespace issues and help canonicalization,
-      # reload the doc
-      doc = Nokogiri::XML.parse(xml.doc.to_xml)
-
-      # Set the digest
-      digest = doc.xpath('//ds:DigestValue', 'ds' => DS_NAMESPACE).first
-      # digest.content = digest_for(text)
-      # TODO: I don't know WHAT i should digest
-
-      find_signed_info(doc) do |signed_info|
-        canon = canonicalize(signed_info)
-        # Add the signature to the document
-        signed_value = doc.xpath('//ds:SignatureValue', 'ds' => DS_NAMESPACE).first
-        signed_value.content = signature_for(canon)
-      end
-
-      doc
-    end
-
     def find_signed_info(doc, &block)
       # Prepare the SignedInfo for the signature
-      signed_info = doc.xpath('//ds:SignedInfo', 'ds' => DS_NAMESPACE).first
+      signed_info = doc.xpath('//ds:SignedInfo').first
       if signed_info.present?
         block.call(signed_info)
       else

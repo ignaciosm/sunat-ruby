@@ -1,5 +1,5 @@
 module SUNAT
-  # decorator for XMLDocuments
+  # decorator for Documents
   class XMLDocument < SimpleDelegator
     
     XML_NAMESPACE       = 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'
@@ -11,12 +11,7 @@ module SUNAT
     XSI_NAMESPACE       = 'http://www.w3.org/2001/XMLSchema-instance'
     
     XSI_SCHEMA_LOCATION = 'urn:sunat:names:specification:ubl:peru:schema:xsd:InvoiceSummary-1 D:\UBL_SUNAT\SUNAT_xml_20110112\20110112\xsd\maindoc\UBLPE-InvoiceSummary-1.0.xsd'
-    
-    C14N_ALGORITHM            = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
-    DIGEST_ALGORITHM          = "http://www.w3.org/2000/09/xmldsig#sha1"
-    SIGNATURE_ALGORITHM       = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
-    TRANSFORMATION_ALGORITHM  = "http://www.w3.org/2000/09/xmldsig#enveloped- signature"
-    
+        
     DATE_FORMAT = "%Y-%m-%d"
     
     CUSTOMIZATION_ID = "1.0"
@@ -36,11 +31,18 @@ module SUNAT
       Nokogiri::XML(xml)
     end
     
+    def make_basic_builder(&block)
+      make_builder_from(declaration) do |xml|
+        build_root xml, &block
+      end
+    end
+    
     private
     
-    def make_builder_from(xml, &block)
-      xml_doc = build_from_xml(xml)
-      Nokogiri::XML::Builder.with(xml_doc, &block)
+    def build_extension(xml, &block)
+      xml['ext'].UBLExtension do
+        xml['ext'].ExtensionContent(&block)
+      end
     end
     
     def format_date(date)
@@ -66,10 +68,9 @@ module SUNAT
       xml.send(self.xml_root, attributes, &block)
     end
     
-    def make_basic_builder(&block)
-      make_builder_from(declaration) do |xml|
-        build_root xml, &block
-      end
+    def make_builder_from(xml, &block)
+      xml_doc = build_from_xml(xml)
+      Nokogiri::XML::Builder.with(xml_doc, &block)
     end
     
     def build_general_data(xml)
@@ -83,12 +84,6 @@ module SUNAT
       xml['ext'].UBLExtensions do
         build_additional_information_extension xml
         build_signature_placeholder_extension xml
-      end
-    end
-    
-    def build_extension(xml, &block)
-      xml['ext'].UBLExtension do
-        xml['ext'].ExtensionContent(&block)
       end
     end
     
