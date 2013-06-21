@@ -1,5 +1,7 @@
 require "sunat/version"
 
+require 'delegate'
+
 require 'active_model'
 require 'active_model/naming'
 require 'active_model/serialization'
@@ -59,6 +61,7 @@ require "sunat/documents/receipt"
 require "sunat/signature"
 require "sunat/signature_config"
 require "sunat/documents/xml_document"
+require "sunat/documents/xml_signer"
 
 module SUNAT
   # Your code goes here...

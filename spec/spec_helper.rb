@@ -1,4 +1,8 @@
-require 'pry'
+begin
+  require 'pry' # useful to make `binding.pry` in a failing test to debug
+rescue Exception => e
+end
+
 
 require 'bundler/setup'
 require 'rspec'

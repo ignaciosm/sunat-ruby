@@ -9,8 +9,6 @@ describe 'serialization of a daily receipt summary' do
   before :all do
     @summary = eval_support_script("serialization/daily_receipt_summary_sample")
     @xml = Nokogiri::XML(@summary.to_xml)
-    
-    puts @summary.to_xml
   end
   
   it "should create a //cbc:IssueDate tag with the the current date formatted as %Y-%m-%d" do

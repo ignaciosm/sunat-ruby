@@ -24,7 +24,7 @@ module SUNAT
     end
     
     def to_xml
-      super :SummaryDocuments do |xml|
+      super do |xml|
         notes.each do |note|
           xml['cbc'].Note note
         end

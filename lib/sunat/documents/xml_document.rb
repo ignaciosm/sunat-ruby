@@ -1,5 +1,3 @@
-require 'delegate'
-
 module SUNAT
   # decorator for XMLDocuments
   class XMLDocument < SimpleDelegator
@@ -24,15 +22,7 @@ module SUNAT
     CUSTOMIZATION_ID = "1.0"
     UBL_VERSION_ID = "2.0"
     
-    # The signature here is for two reasons:
-    #   1. easy call of the global SUNAT::SIGNATURE
-    #   2. possible dependency injection of a signature in a test vía stubs
-    # 
-    def signature
-      SUNAT::SIGNATURE
-    end
-    
-    def build_basic_xml(&block)
+    def build_xml(&block)
       make_basic_builder do |xml|
         build_ubl_extensions xml
         build_general_data xml
@@ -42,14 +32,23 @@ module SUNAT
       end.to_xml
     end
     
+    def build_from_xml(xml)
+      Nokogiri::XML(xml)
+    end
+    
     private
+    
+    def make_builder_from(xml, &block)
+      xml_doc = build_from_xml(xml)
+      Nokogiri::XML::Builder.with(xml_doc, &block)
+    end
     
     def format_date(date)
       date.strftime(DATE_FORMAT)
     end
     
     def declaration
-      @_declaration ||= Nokogiri::XML('<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>')
+      @_declaration ||= '<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>'
     end
     
     def build_root(xml, &block)
@@ -68,7 +67,7 @@ module SUNAT
     end
     
     def make_basic_builder(&block)
-      Nokogiri::XML::Builder.with(declaration) do |xml|
+      make_builder_from(declaration) do |xml|
         build_root xml, &block
       end
     end
@@ -93,9 +92,11 @@ module SUNAT
       end
     end
     
-    def build_additional_information_extension(xml)      
+    def build_additional_information_extension(xml)
+      return if additional_monetary_totals.empty? or additional_monetary_totals.empty?
+      
       build_extension xml do
-        xml['sac'].AdditionalInformation do
+        xml['sac'].AdditionalInformation do                  
           self.additional_monetary_totals.each do |additional_monetary_total|
             additional_monetary_total.build_xml xml
           end
@@ -104,6 +105,11 @@ module SUNAT
           end
         end
       end
-    end    
+    end
+    
+    def build_signature_placeholder_extension(xml)
+      build_extension xml
+    end
+    
   end
 end

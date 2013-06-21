@@ -25,4 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "annotations"
   spec.add_development_dependency "nokogiri"
+  # TODO: for debug... delete later
+  spec.add_development_dependency "pry"
 end

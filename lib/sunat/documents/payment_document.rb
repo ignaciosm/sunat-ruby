@@ -31,7 +31,7 @@ module SUNAT
         end
         
         def to_xml
-          super :Invoice do |xml|
+          super do |xml|
             xml['cbc'].InvoiceTypeCode      invoice_type_code
             xml['cbc'].DocumentCurrencyCode document_currency_code
             
@@ -42,11 +42,9 @@ module SUNAT
               total.build_xml xml
             end
             
-            if legal_monetary_total.present?
-              xml['cac'].LegalMonetaryTotal do
-                legal_monetary_total.build xml, :PayableAmount
-              end
-            end
+            xml['cac'].LegalMonetaryTotal do
+              legal_monetary_total.build xml, :PayableAmount
+            end if legal_monetary_total.present?
             
             invoice_lines.each do |invoice_line|
               invoice_line.build_xml xml

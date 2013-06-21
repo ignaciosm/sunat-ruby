@@ -41,14 +41,27 @@ module SUNAT
       end
     end
     
+    # The signature here is for two reasons:
+    #   1. easy call of the global SUNAT::SIGNATURE
+    #   2. possible dependency injection of a signature in a test vía stubs
+    # 
+    attr_accessor :signature
+    
+    def signature
+      @signature ||= SUNAT::SIGNATURE
+    end
+    
     protected
     
-    def to_xml(root_name, &block)
-      # Auto-decorate
+    def to_xml(&block)
+      # We create a decorator responsible to build the xml in top
+      # of this document
       xml_document = XMLDocument.new(self)
-      xml_document.build_basic_xml do |xml|
-        block.call(xml) if block.present?
-      end
+      xml = xml_document.build_xml(&block)
+      # We pass a decorator to xml_signer, to allow it to use some generators
+      # of xml_document
+      xml_signer = XMLSigner.new(xml_document)
+      xml_signer.sign(xml)
     end
   end
 end
