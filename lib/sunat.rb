@@ -1,15 +1,9 @@
 require "sunat/version"
 
-require 'delegate'
-
-require 'active_model'
-require 'active_model/naming'
-require 'active_model/serialization'
-require 'active_model/validator'
-require 'active_model/validations'
-
-require 'active_support/core_ext'
-require 'active_support/json'
+# The dependencies are isolated into one file.
+# The reason is because they can be loaded
+# independently by zeus or another test utility.
+require "sunat/dependencies"
 
 # Base support modules
 require "sunat/castable"
@@ -44,11 +38,6 @@ require "sunat/models/invoice_line"
 require "sunat/models/additional_property"
 require "sunat/models/monetary_total"
 require "sunat/models/referral_guideline"
-
-# OpenSSL
-require "openssl"
-# Nokogiri
-require "nokogiri"
 
 # Base Document
 require "sunat/document"

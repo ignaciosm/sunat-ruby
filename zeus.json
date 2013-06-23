@@ -1,0 +1,12 @@
+{
+  "command": "ruby -rubygems -r./custom_plan -eZeus.go",
+
+  "plan": {
+    "boot": {
+      "default_env": {
+        "test_helper": {"test": ["rspec", "testrb"]},
+        "prerake": {"rake": []}
+      }
+    }
+  }
+}
