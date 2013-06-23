@@ -1,9 +1,9 @@
 require 'zeus/rails'
 
-# This custom plan (and zeus.json file altogether) allows us
+# This custom plan (and the zeus.json file altogether) allows us
 # to use zeus and rspec without rails...
 # 
-# Howerver, theres is one gotcha: zeus only can execute well
+# However, there is one gotcha: zeus only can execute correctly
 # if we use a Gemfile with zeus and install the dependencies
 # as binstubs. Otherwise, Zeus will never load the commands.
 # 
