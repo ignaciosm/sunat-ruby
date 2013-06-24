@@ -41,14 +41,17 @@ describe Sender do
     it "should build a xml example document" do
       sender.connect
       sender.build
-      sender.operation.body[:sendSummary][:fileName].should == @name
+      sender.operation.body[:sendSummary][:fileName].should include(@name)
       sender.operation.body[:sendSummary][:contentFile].should == @encoded_zip
     end
   end
   
   describe "#send" do
     it "should call send" do
-      sender.send
+      puts "DOCUMENT\n**"
+      puts @document
+      puts "RESULT\n**"
+      puts sender.send
     end
   end
 

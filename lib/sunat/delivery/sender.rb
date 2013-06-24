@@ -23,7 +23,7 @@ module SUNAT
         @operation = client.operation(*operation_list)
         @operation.body = {
           sendSummary: {
-            fileName: name,
+            fileName: "#{name}.zip",
             contentFile: encoded_zip
           }
         }
@@ -34,7 +34,7 @@ module SUNAT
         connect
         build
         response = operation.call
-        puts response.hash
+        response.hash
       end
     end
   end
