@@ -9,8 +9,11 @@ module SUNAT
     
     property :issue_date,                 Date
     property :customization_id,           String
+    property :accounting_supplier_party,  AccountingParty
     property :additional_monetary_totals, [MonetaryTotal]
     property :additional_properties,      [AdditionalProperty]
+    
+    validates :accounting_supplier_party, existence: true
     
     def self.xml_root(root_name)
       define_method :xml_root do
@@ -23,6 +26,18 @@ module SUNAT
       self.issue_date = Date.today
       self.additional_properties = []
       self.additional_monetary_totals = []
+    end
+    
+    def file_name
+      raise "should be implemented in the real document"
+    end
+    
+    def ruc
+      self.accounting_supplier_party.account_id
+    end
+    
+    def correlative_number
+      "1" # TODO: i don't know if we really need a correlative number
     end
     
     def customization_id

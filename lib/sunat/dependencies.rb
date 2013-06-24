@@ -9,5 +9,6 @@ require 'active_model/validations'
 require 'active_support/core_ext'
 require 'active_support/json'
 
-require "openssl"
-require "nokogiri"
+require 'openssl'
+require 'nokogiri'
+require 'savon'

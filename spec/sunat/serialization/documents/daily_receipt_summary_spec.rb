@@ -33,17 +33,17 @@ describe 'serialization of a daily receipt summary' do
   
   describe "node AccountingSupplier" do
     it "should have CustomerAssignedAccountID equivalent to the account_id" do
-      @xml.xpath("//cbc:CustomerAssignedAccountID").text.should eq(@summary.accounting_supplier.account_id)
+      @xml.xpath("//cbc:CustomerAssignedAccountID").text.should eq(@summary.accounting_supplier_party.account_id)
     end
     it "should have AdditionalAccountID equivalent to the additional_account_id" do
-      @xml.xpath("//cbc:AdditionalAccountID").text.should eq(@summary.accounting_supplier.additional_account_id)
+      @xml.xpath("//cbc:AdditionalAccountID").text.should eq(@summary.accounting_supplier_party.additional_account_id)
     end
     
     describe "node Party" do
       it "should insert a entity name into the xml" do
         entity_name_location = "//cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"
         xml_entity_name = @xml.xpath(entity_name_location).text
-        oo_entity_name = @summary.accounting_supplier.party.party_legal_entities.first.registration_name
+        oo_entity_name = @summary.accounting_supplier_party.party.party_legal_entities.first.registration_name
         
         xml_entity_name.should eq(oo_entity_name)
       end

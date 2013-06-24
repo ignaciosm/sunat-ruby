@@ -47,10 +47,18 @@ require "sunat/documents/daily_receipt_summary"
 require "sunat/documents/payment_document"
 require "sunat/documents/invoice"
 require "sunat/documents/receipt"
+
+# Construction and Signature
 require "sunat/signature"
 require "sunat/signature_config"
 require "sunat/documents/xml_document"
 require "sunat/documents/xml_signer"
+
+# Delivery Preparation
+require "sunat/delivery/zipper"
+require "sunat/delivery/chef"
+
+# Delivery
 
 module SUNAT
   # Your code goes here...

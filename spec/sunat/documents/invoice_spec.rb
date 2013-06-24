@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe SUNAT::Invoice do
   include ValidationSpecHelpers
+  include SupportingSpecHelpers
   
   let :invoice do
     SUNAT::Invoice.new
@@ -25,6 +26,29 @@ describe SUNAT::Invoice do
       expect_invalid  invoice, :invoice_type_code, "AB"
       expect_invalid  invoice, :invoice_type_code, "013"
       expect_valid    invoice, :invoice_type_code, "12"
+    end
+  end
+  
+  describe "#file_name" do
+    before :all do
+      @invoice = eval_support_script("serialization/invoice_sample")
+    end
+    
+    it "should have a voucher_serie" do
+      @invoice.voucher_serie.should_not be_nil
+    end
+    
+    it "should have a voucher_serie of 4 characters" do
+      @invoice.voucher_serie.size.should eq(4)
+    end
+    
+    it "include all the parts of the invoice file name" do
+      ruc = @invoice.ruc
+      kind = @invoice.class::DOCUMENT_TYPE_CODE
+      serie = @invoice.voucher_serie
+      correlative_number = @invoice.correlative_number
+      
+      @invoice.file_name.should eq("#{ruc}-#{kind}-#{serie}-#{correlative_number}")
     end
   end
 end

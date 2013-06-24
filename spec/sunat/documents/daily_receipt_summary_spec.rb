@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe SUNAT::DailyReceiptSummary do
+  include SupportingSpecHelpers
   
   let :summary do
     SUNAT::DailyReceiptSummary.new
@@ -33,9 +34,28 @@ describe SUNAT::DailyReceiptSummary do
   describe "validations" do
     it "should be valid only with an accounting supplier." do
       summary.valid?.should eq(false)
-      summary.accounting_supplier = account_supplier
+      summary.accounting_supplier_party = account_supplier
       summary.valid?.should eq(true)
     end
+  end
+  
+  describe "file_name" do
+    before :all do
+      @daily_receipt = eval_support_script("serialization/daily_receipt_summary_sample")
+    end
+    
+    it "has a summary type of 2 characters" do
+      @daily_receipt.class::SUMMARY_TYPE.size.should eq(2)
+    end
+    
+    it "include all the parts of the daily receipt summary file name" do
+      ruc = @daily_receipt.ruc
+      kind = @daily_receipt::class::SUMMARY_TYPE
+      date = @daily_receipt.issue_date.strftime("%Y%m%d")
+      correlative_number = @daily_receipt.correlative_number
+      
+      @daily_receipt.file_name.should eq("#{ruc}-RC-#{date}-#{correlative_number}")
+    end    
   end
   
 end

@@ -7,7 +7,6 @@ module SUNAT
       base.property :id,                              String # serie + correlative number
       base.property :invoice_type_code,               String
       base.property :document_currency_code,          String
-      base.property :accounting_supplier_party,       AccountingParty
       base.property :accounting_customer_party,       AccountingParty
       base.property :legal_monetary_total,            PaymentAmount
       base.property :invoice_lines,                   [InvoiceLine]
@@ -28,6 +27,11 @@ module SUNAT
           self.additional_monetary_totals = []
           self.additional_properties = []
           self.invoice_type_code = self.class::DOCUMENT_TYPE_CODE
+        end
+        
+        def file_name
+          document_type_code = self.class::DOCUMENT_TYPE_CODE
+          "#{ruc}-#{document_type_code}-#{voucher_serie}-#{correlative_number}"
         end
         
         def to_xml

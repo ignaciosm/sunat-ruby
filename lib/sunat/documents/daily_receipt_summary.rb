@@ -6,15 +6,15 @@ module SUNAT
   
   class DailyReceiptSummary < Document
     
+    SUMMARY_TYPE = 'RC' # Look Sunat's Programmer's manual page 6
+    
     xml_root :SummaryDocuments
     
     property :id,                   String
     property :reference_date,       Date
-    property :accounting_supplier,  AccountingParty
     property :lines,                [SummaryDocumentsLine]
     property :notes,                [String]
     
-    validates :accounting_supplier, existence: true
     validates :lines, not_empty: true
     
     def initialize
@@ -24,13 +24,18 @@ module SUNAT
       self.id     ||= default_id
     end
     
+    def file_name
+      formatted_issue_date = issue_date.strftime("%Y%m%d")
+      "#{ruc}-#{SUMMARY_TYPE}-#{formatted_issue_date}-#{correlative_number}"
+    end
+    
     def to_xml
       super do |xml|
         notes.each do |note|
           xml['cbc'].Note note
         end
         
-        accounting_supplier.build_xml xml, :AccountingSupplierParty
+        accounting_supplier_party.build_xml xml, :AccountingSupplierParty
         
         lines.each do |line|
           line.build_xml xml
