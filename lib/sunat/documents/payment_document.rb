@@ -34,6 +34,10 @@ module SUNAT
           "#{ruc}-#{document_type_code}-#{voucher_serie}-#{correlative_number}"
         end
         
+        def operation_list
+          [:billService, :BillServicePort, :sendBill]
+        end
+        
         def to_xml
           super do |xml|
             xml['cbc'].InvoiceTypeCode      invoice_type_code

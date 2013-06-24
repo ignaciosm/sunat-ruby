@@ -57,6 +57,7 @@ require "sunat/documents/xml_signer"
 # Delivery Preparation
 require "sunat/delivery/zipper"
 require "sunat/delivery/chef"
+require "sunat/delivery/sender"
 
 # Delivery
 

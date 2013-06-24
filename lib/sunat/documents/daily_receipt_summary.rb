@@ -24,6 +24,10 @@ module SUNAT
       self.id     ||= default_id
     end
     
+    def operation_list
+      [:billService, :BillServicePort, :sendSummary]
+    end
+    
     def file_name
       formatted_issue_date = issue_date.strftime("%Y%m%d")
       "#{ruc}-#{SUMMARY_TYPE}-#{formatted_issue_date}-#{correlative_number}"

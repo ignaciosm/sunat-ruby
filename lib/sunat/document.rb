@@ -32,6 +32,10 @@ module SUNAT
       raise "should be implemented in the real document"
     end
     
+    def operation_list
+      raise "should be implemented in the real document"
+    end
+    
     def ruc
       self.accounting_supplier_party.account_id
     end
