@@ -34,8 +34,8 @@ module SUNAT
           "#{ruc}-#{document_type_code}-#{voucher_serie}-#{correlative_number}"
         end
         
-        def operation_list
-          [:billService, :BillServicePort, :sendBill]
+        def operation
+          :send_bill
         end
         
         def to_xml

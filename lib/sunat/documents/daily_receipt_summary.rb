@@ -24,8 +24,8 @@ module SUNAT
       self.id     ||= default_id
     end
     
-    def operation_list
-      [:billService, :BillServicePort, :sendSummary]
+    def operation
+      :send_summary
     end
     
     def file_name
