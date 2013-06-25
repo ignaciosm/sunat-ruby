@@ -1,5 +1,6 @@
 require "spec_helper"
 
+include SUNAT
 include SUNAT::Delivery
 
 describe Sender do
