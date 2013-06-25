@@ -12,16 +12,28 @@ module SUNAT
   end
   
   class Signature
-    attr_accessor :certificate, :id, :party_id, :party_name, :uri, :private_key
+    attr_accessor :id, :party_id, :party_name, :uri, :cert_file, :pk_file
     
-    def build_certificate(*args)
-      cert = Certificate.new(*args)
-      yield cert if block_given?
-      self.certificate = cert
+    attr_reader :certificate, :private_key
+    
+    def cert_file=(file)
+      @cert_file = file
+      build_certificate
     end
     
-    def build_private_key(private_key)
-      self.private_key = OpenSSL::PKey::RSA.new(private_key)
+    def pk_file=(file)
+      @pk_file = file
+      build_private_key
+    end
+    
+    def build_certificate
+      cert_content = File.read(cert_file)
+      @certificate = Certificate.new(cert_content)
+    end
+    
+    def build_private_key
+      private_key_content = File.read(pk_file)
+      @private_key = OpenSSL::PKey::RSA.new(private_key_content)
     end
     
     def signature_for(text)

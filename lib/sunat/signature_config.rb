@@ -14,10 +14,6 @@ SUNAT.configure_signature do |s|
   s.party_id    = "20100454523"
   s.party_name  = "SOPORTE TECNOLOGICO EIRL"
   s.uri         = "#SignST"
-  
-  cert_data = File.read(File.join(Dir.pwd, 'spec', 'sunat', 'support', 'test.crt'))
-  s.build_certificate(cert_data)
-  
-  pk_data = File.read(File.join(Dir.pwd, 'spec', 'sunat', 'support', 'test_decrypted.key'))
-  s.build_private_key(pk_data)
+  s.cert_file   = File.join(Dir.pwd, 'spec', 'sunat', 'support', 'test.crt')
+  s.pk_file     = File.join(Dir.pwd, 'spec', 'sunat', 'support', 'test_decrypted.key')
 end

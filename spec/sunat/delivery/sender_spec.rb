@@ -14,9 +14,13 @@ describe Sender do
     @encoded_zip    = @chef.prepare
   end
   
+  let(:ruc)      { ENV['SUNAT_RUC'] }
+  let(:username) { ENV['SUNAT_USERNAME'] }
+  let(:password) { ENV['SUNAT_PASSWORD'] }
+  
   let :sender do
     sender = Sender.new(@name, @encoded_zip, @operation)
-    sender.auth_with "ruc", "username", "password"
+    sender.auth_with ruc, username, password
     sender
   end
   
@@ -39,10 +43,11 @@ describe Sender do
     end
   end
   
-  describe "#send" do
+  describe "#send" do    
     it "should call send" do
-      sender.auth_with "ruc", "username", "password"
-      sender.call
+      expect do
+        sender.call
+      end.to_not raise_error
     end
   end
 

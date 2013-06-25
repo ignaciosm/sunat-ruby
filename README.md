@@ -18,6 +18,21 @@ Or install it yourself as:
 
 ## Usage
 
+Set the next ENV variables: SUNAT_RUC, SUNAT_USERNAME and SUNAT_PASSWORD.
+They must be secret!
+
+In Fish:
+
+  set -gx SUNAT_RUC ruc # ruc
+  set -gx SUNAT_USERNAME username # sol user
+  set -gx SUNAT_PASSWORD password # sol password
+
+In Bash:
+  
+  export SUNAT_RUC=ruc # ruc
+  export SUNAT_USERNAME=username # sol user
+  export SUNAT_PASSWORD=password # sol password
+
 
 ## Serialization
 
