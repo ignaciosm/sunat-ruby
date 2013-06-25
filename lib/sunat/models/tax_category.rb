@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module SUNAT
   class TaxCategory
     include Model
