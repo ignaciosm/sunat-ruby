@@ -42,13 +42,14 @@ module SUNAT
       
       private
       
-      def new_client        
-        username = credentials.username
-        password = credentials.password
+      def new_client
+        ruc       = credentials.ruc
+        username  = credentials.username
+        password  = credentials.password
         
         Savon.client(
           wsdl:               WSDL,
-          wsse_auth:          [username, password],
+          wsse_auth:          [ruc + username, password],
           ssl_cert_file:      cert_file,
           ssl_cert_key_file:  pk_file,
           ssl_version:        :SSLv3
