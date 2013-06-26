@@ -36,7 +36,7 @@ describe Sender do
   describe "#connect" do
     it "should get a list of operations" do
       sender.connect
-      sender.client.operations.tap do |it|
+      sender.client.operations.tap do |it|        
         it.should_not be_nil
         it.should respond_to(:size)
         it.size.should > 0

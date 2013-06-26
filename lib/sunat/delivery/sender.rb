@@ -22,11 +22,11 @@ module SUNAT
       end
       
       def auth_with(ruc, username, password)
-        @credentials = OpenStruct.new.tap do |cred|
-          cred.ruc = ruc
-          cred.username = username
-          cred.password = password
-        end
+        @credentials = {
+          ruc: ruc,
+          username: username,
+          password: password
+        }
       end
       
       def call
@@ -43,9 +43,9 @@ module SUNAT
       private
       
       def new_client
-        ruc       = credentials.ruc
-        username  = credentials.username
-        password  = credentials.password
+        ruc       = credentials[:ruc]
+        username  = credentials[:username]
+        password  = credentials[:password]
         
         Savon.client(
           wsdl:               WSDL,

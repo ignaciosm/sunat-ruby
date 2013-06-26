@@ -1,5 +1,4 @@
 require 'delegate'
-require 'ostruct'
 
 require 'active_model'
 require 'active_model/naming'
