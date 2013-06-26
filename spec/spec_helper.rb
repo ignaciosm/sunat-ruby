@@ -12,6 +12,26 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'sunat'
 
+# Configure sunat for Tests
+# And we use this method to configure the signature
+# Should be in an initializer in Rails
+SUNAT.configure do |config|
+  config.credentials do |c|
+    c.ruc       = ENV['SUNAT_RUC']
+    c.username  = ENV['SUNAT_USERNAME']
+    c.password  = ENV['SUNAT_PASSWORD']
+  end
+  
+  config.signature do |s|
+    s.id          = "2010945"
+    s.party_id    = "20100454523"
+    s.party_name  = "SOPORTE TECNOLOGICO EIRL"
+    s.uri         = "#SignST"
+    s.cert_file   = File.join(Dir.pwd, 'spec', 'sunat', 'support', 'test.crt')
+    s.pk_file     = File.join(Dir.pwd, 'spec', 'sunat', 'support', 'test_decrypted.key')
+  end
+end
+
 module ValidationSpecHelpers
   def expect_valid(model, key, value)
     expect_validness(model, key, value, true)

@@ -3,7 +3,7 @@ HTTPI.adapter = :net_http
 module SUNAT
   module Delivery
     class Sender
-      attr_reader :name, :encoded_zip, :operation, :client, :operation, :credentials
+      attr_reader :name, :encoded_zip, :operation, :client, :operation
       
       WSDL = "https://www.sunat.gob.pe/ol-ti-itcpgem-sqa/billService?wsdl"
       
@@ -11,6 +11,7 @@ module SUNAT
         @operation = operation
         @encoded_zip = encoded_zip
         @name = name
+        @credentials = credentials
       end
       
       def connect
@@ -19,14 +20,6 @@ module SUNAT
       
       def connect!
         @client = new_client
-      end
-      
-      def auth_with(ruc, username, password)
-        @credentials = {
-          ruc: ruc,
-          username: username,
-          password: password
-        }
       end
       
       def call
@@ -43,17 +36,20 @@ module SUNAT
       private
       
       def new_client
-        ruc       = credentials[:ruc]
-        username  = credentials[:username]
-        password  = credentials[:password]
+        login     = credentials.login
+        password  = credentials.password
         
         Savon.client(
           wsdl:               WSDL,
-          wsse_auth:          [ruc + username, password],
+          wsse_auth:          [login, password],
           ssl_cert_file:      cert_file,
           ssl_cert_key_file:  pk_file,
           ssl_version:        :SSLv3
         )
+      end
+      
+      def credentials
+        SUNAT::CREDENTIALS
       end
       
       def cert_file

@@ -50,7 +50,8 @@ require "sunat/documents/receipt"
 
 # Construction and Signature
 require "sunat/signature"
-require "sunat/signature_config"
+require "sunat/credentials"
+require "sunat/config"
 require "sunat/documents/xml_document"
 require "sunat/documents/xml_signer"
 
