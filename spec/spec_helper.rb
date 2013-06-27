@@ -27,8 +27,8 @@ SUNAT.configure do |config|
     s.party_id    = "20100454523"
     s.party_name  = "SOPORTE TECNOLOGICO EIRL"
     s.uri         = "#SignST"
-    s.cert_file   = File.join(Dir.pwd, 'spec', 'sunat', 'support', 'test.crt')
-    s.pk_file     = File.join(Dir.pwd, 'spec', 'sunat', 'support', 'test_decrypted.key')
+    s.cert_file   = File.join(Dir.pwd, 'spec', 'sunat', 'support', 'keys', 'sunat.crt')
+    s.pk_file     = File.join(Dir.pwd, 'spec', 'sunat', 'support', 'keys', 'sunat_decrypted.key')
   end
 end
 
