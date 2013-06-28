@@ -9,17 +9,15 @@ DailyReceiptSummary.new.tap do |s|
   end
   
   s.lines << SummaryDocumentsLine.new.tap do |line|
-    line.line_id = "1"
     line.document_type_code = '03'
+    
+    line.line_id = "1"
     line.serial_id = "BA98"
     line.start_id = "456"
     line.end_id = "764"
-
-    line.total_amount = PaymentAmount.new do |amount|
-      amount.currency = "PEN"
-      amount.value = 117350
-    end
     
+    line.total_amount = PaymentAmount[117350, "PEN"]
+        
     line.billing_payments << BillingPayment.new.tap do |billing|
       billing.build_paid_amount do |payment|
         payment.currency = "PEN"
