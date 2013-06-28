@@ -40,11 +40,11 @@ describe Sender do
   end
   
   describe "#send" do    
-    it "should call send" do
-      expect do
-        sender.call
-      end.to_not raise_error
-    end
+    # it "should not raise an error" do
+    #   expect do
+    #     sender.call
+    #   end.to_not raise_error
+    # end
   end
 
 end

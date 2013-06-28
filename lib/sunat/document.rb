@@ -6,6 +6,7 @@ module SUNAT
     include Model
     
     DEFAULT_CUSTOMIZATION_ID = "1.0"
+    RUC_DOCUMENT_CODE = "6"
     
     property :issue_date,                 Date
     property :customization_id,           String
@@ -36,8 +37,19 @@ module SUNAT
       raise "should be implemented in the real document"
     end
     
+    def ruc=(ruc_number)
+      self.accounting_supplier_party ||= SUNAT::AccountingParty.new
+      self.accounting_supplier_party.account_id = ruc_number
+      self.accounting_supplier_party.additional_account_id = RUC_DOCUMENT_CODE
+    end
+    
     def ruc
       self.accounting_supplier_party.account_id
+    end
+    
+    def legal_name=(name)
+      self.accounting_supplier_party ||= AccountingParty.new
+      self.accounting_supplier_party.build_party_with_legal_name(name)
     end
     
     def correlative_number
