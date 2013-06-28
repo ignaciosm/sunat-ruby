@@ -14,8 +14,8 @@ DailyReceiptSummary.new.tap do |s|
     line.serial_id = "BA98"
     line.start_id = "456"
     line.end_id = "764"
-    
-    line.build_total_amount do |amount|
+
+    line.total_amount = PaymentAmount.new do |amount|
       amount.currency = "PEN"
       amount.value = 117350
     end

@@ -11,7 +11,7 @@ describe SUNAT::DailyReceiptSummary do
     SUNAT::AccountingParty.new
   end
   
-  describe ".new" do
+  describe "#initialize" do
     it "should initialize with no notes." do
       summary.notes.should_not be_nil
       summary.notes.should be_empty
@@ -39,7 +39,20 @@ describe SUNAT::DailyReceiptSummary do
     end
   end
   
-  describe "file_name" do
+  describe "#add_line" do
+    it "should yield a line of SummaryDocumentsLine" do
+      summary.add_line do |line|
+        line.should be_kind_of(SUNAT::SummaryDocumentsLine)
+      end
+    end
+    it "should add a line to the summary lines" do
+      initial_lines = summary.lines.size
+      summary.add_line { }
+      summary.lines.size.should == initial_lines + 1
+    end
+  end
+  
+  describe "#file_name" do
     before :all do
       @daily_receipt = eval_support_script("serialization/daily_receipt_summary_sample")
     end

@@ -33,6 +33,10 @@ module SUNAT
       "#{ruc}-#{SUMMARY_TYPE}-#{formatted_issue_date}-#{correlative_number}"
     end
     
+    def add_line(&block)
+      self.lines << SummaryDocumentsLine.new.tap(&block)
+    end
+    
     def to_xml
       super do |xml|
         notes.each do |note|

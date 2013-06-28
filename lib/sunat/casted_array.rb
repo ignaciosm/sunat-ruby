@@ -12,7 +12,7 @@ module SUNAT
     include Castable
 
     def_delegators :@_array,
-      :to_a, :==, :eql?,
+      :to_a, :==, :eql?, :size,
       :first, :last, :at, :length,
       :each, :reject, :empty?, :map,
       :clear, :pop, :shift, :delete, :delete_at,

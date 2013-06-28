@@ -23,6 +23,8 @@ module SUNAT
       self.billing_payments = []
       self.allowance_charges = []
       self.tax_totals = []
+      
+      self.document_type_code = receipt_document_code
     end
     
     def build_xml(xml)
@@ -45,6 +47,12 @@ module SUNAT
           billing_payment.build_xml xml
         end
       end
+    end
+    
+    private
+    
+    def receipt_document_code
+      SUNAT::Receipt::DOCUMENT_TYPE_CODE
     end
     
     
