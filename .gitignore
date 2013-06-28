@@ -18,3 +18,4 @@ tmp
 .zeus.sock
 bin
 SECRET.md
+.ruby-version
