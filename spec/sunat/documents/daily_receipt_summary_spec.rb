@@ -50,6 +50,15 @@ describe SUNAT::DailyReceiptSummary do
       summary.add_line { }
       summary.lines.size.should == initial_lines + 1
     end
+    it "should add a line with a consecutive line_id beginning in 1" do
+      summary.add_line { }
+      summary.add_line { }
+      summary.add_line { }
+      
+      summary.lines[0].line_id.should == "1"
+      summary.lines[1].line_id.should == "2"
+      summary.lines[2].line_id.should == "3"
+    end
   end
   
   describe "#file_name" do

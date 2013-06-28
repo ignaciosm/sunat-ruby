@@ -34,7 +34,9 @@ module SUNAT
     end
     
     def add_line(&block)
-      self.lines << SummaryDocumentsLine.new.tap(&block)
+      line = SummaryDocumentsLine.new.tap(&block)
+      line.line_id = get_line_number.to_s
+      self.lines << line
     end
     
     def to_xml
@@ -56,6 +58,12 @@ module SUNAT
     def default_id
       plain_date = Date.today.strftime("%Y%m%d")
       "RC-#{plain_date}"
+    end
+    
+    def get_line_number
+      @current_line_number ||= 0
+      @current_line_number += 1
+      @current_line_number
     end
     
   end
