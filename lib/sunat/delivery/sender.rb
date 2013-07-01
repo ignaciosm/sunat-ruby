@@ -5,7 +5,8 @@ module SUNAT
     class Sender
       attr_reader :name, :encoded_zip, :operation, :client, :operation
       
-      WSDL = "https://www.sunat.gob.pe/ol-ti-itcpgem-sqa/billService?wsdl"
+      WSDL = "https://www.sunat.gob.pe/ol-ti-itcpgem/billService?wsdl"
+      # WSDL = "http://64.76.79.139/ol-ti-itcpgem-sqa/billService?wsdl"
       
       def initialize(name, encoded_zip, operation)
         @operation = operation
