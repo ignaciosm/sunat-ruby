@@ -27,6 +27,15 @@ module SUNAT
       self.document_type_code = receipt_document_code
     end
     
+    def add_billing_payment(amount, currency)
+      payment = BillingPayment.new.tap do |billing|
+        billing.paid_amount = PaymentAmount[amount, currency]
+        billing.instruction_id = "%.2d" % billing_payments.size.next
+      end
+      
+      billing_payments << payment
+    end
+    
     def build_xml(xml)
       xml['sac'].SummaryDocumentsLine do
         xml['cbc'].LineID                 line_id
