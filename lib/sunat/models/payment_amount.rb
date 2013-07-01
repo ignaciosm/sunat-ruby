@@ -14,6 +14,12 @@ module SUNAT
       xml['cbc'].send(tag_name, { currencyId: currency }, value)
     end
     
+    def to_s
+      int_part = value / 100
+      cents_part = value % 100
+      "#{int_part}.#{cents_part}"
+    end
+    
     class << self
       def [](value, currency)
         self.new.tap do |payment|

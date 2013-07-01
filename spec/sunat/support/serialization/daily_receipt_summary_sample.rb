@@ -16,12 +16,12 @@ DailyReceiptSummary.new.tap do |s|
     line.start_id = "456"
     line.end_id = "764"
     
-    line.total_amount = PaymentAmount[117350, "PEN"]
+    line.total_amount = PaymentAmount[11735000, "PEN"]
         
     line.billing_payments << BillingPayment.new.tap do |billing|
       billing.build_paid_amount do |payment|
         payment.currency = "PEN"
-        payment.value = 98232
+        payment.value = 9823200
       end
       billing.instruction_id = "01"
     end
@@ -37,7 +37,7 @@ DailyReceiptSummary.new.tap do |s|
     line.billing_payments << BillingPayment.new.tap do |billing|
       billing.build_paid_amount do |payment|
         payment.currency = "PEN"
-        payment.value = 232
+        payment.value = 23200
       end
       billing.instruction_id = "03"
     end
@@ -46,7 +46,7 @@ DailyReceiptSummary.new.tap do |s|
       charge.charge_indicator = "true"
       charge.build_amount do |amount|
         amount.currency = "PEN"
-        amount.value = 5
+        amount.value = 500
       end
     end
     
