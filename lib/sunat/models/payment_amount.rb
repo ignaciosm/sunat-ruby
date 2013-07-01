@@ -11,7 +11,7 @@ module SUNAT
     validates :currency, currency_code: true
     
     def build_xml(xml, tag_name)
-      xml['cbc'].send(tag_name, { currencyId: currency }, value)
+      xml['cbc'].send(tag_name, { currencyId: currency }, to_s)
     end
     
     def to_s
