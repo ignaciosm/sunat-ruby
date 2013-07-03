@@ -20,7 +20,7 @@ describe Sender do
     sender
   end
   
-  describe "#initialize" do    
+  describe "#initialize" do  
     it "receives a name and encoded_zip" do
       sender.name.should == @name
       sender.encoded_zip.should == @encoded_zip
@@ -30,20 +30,24 @@ describe Sender do
   
   describe "#connect" do
     it "should get a list of operations" do
-      sender.connect
-      sender.client.operations.tap do |it|        
-        it.should_not be_nil
-        it.should respond_to(:size)
-        it.size.should > 0
+      if SUNAT::CREDENTIALS.ruc.present?
+        sender.connect
+        sender.client.operations.tap do |it|        
+          it.should_not be_nil
+          it.should respond_to(:size)
+          it.size.should > 0
+        end
       end
     end
   end
   
   describe "#send" do    
     it "should not raise an error" do
-      expect do
-        sender.call
-      end.to_not raise_error
+      if SUNAT::CREDENTIALS.ruc.present?
+        expect do
+          sender.call
+        end.to_not raise_error
+      end
     end
   end
 

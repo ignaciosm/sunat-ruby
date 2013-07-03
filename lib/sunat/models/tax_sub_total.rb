@@ -9,7 +9,7 @@ module SUNAT
     def build_xml(xml)
       xml['cac'].TaxSubTotal do
         tax_amount.build_xml xml, :TaxAmount
-        tax_category.build_xml xml
+        tax_category.build_xml(xml) if tax_category
       end
     end
   end

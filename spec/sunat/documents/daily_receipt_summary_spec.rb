@@ -1,14 +1,16 @@
 require 'spec_helper'
 
-describe SUNAT::DailyReceiptSummary do
+include SUNAT
+
+describe DailyReceiptSummary do
   include SupportingSpecHelpers
   
   let :summary do
-    SUNAT::DailyReceiptSummary.new
+    DailyReceiptSummary.new
   end
   
   let :account_supplier do
-    SUNAT::AccountingParty.new
+    AccountingParty.new
   end
   
   describe "#initialize" do
@@ -42,7 +44,7 @@ describe SUNAT::DailyReceiptSummary do
   describe "#add_line" do
     it "should yield a line of SummaryDocumentsLine" do
       summary.add_line do |line|
-        line.should be_kind_of(SUNAT::SummaryDocumentsLine)
+        line.should be_kind_of(SummaryDocumentsLine)
       end
     end
     it "should add a line to the summary lines" do

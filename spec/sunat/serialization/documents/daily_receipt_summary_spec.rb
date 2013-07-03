@@ -31,6 +31,10 @@ describe 'serialization of a daily receipt summary' do
     end.should eq(@summary.notes.to_a)
   end
   
+  it "should have a total amount" do
+    @xml.xpath("//sac:TotalAmount").count.should == 1
+  end
+  
   describe "node AccountingSupplier" do
     it "should have CustomerAssignedAccountID equivalent to the account_id" do
       @xml.xpath("//cbc:CustomerAssignedAccountID").text.should eq(@summary.accounting_supplier_party.account_id)
