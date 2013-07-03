@@ -5,7 +5,7 @@ DailyReceiptSummary.new.tap do |s|
   s.ruc = "20100113612"
   s.legal_name = "K&G Laboratorios"
   
-  s.lines << SummaryDocumentsLine.new.tap do |line|
+  s.add_line do |line|
     line.serial_id = "BA98"
     line.start_id = "456"
     line.end_id = "764"
@@ -26,7 +26,5 @@ DailyReceiptSummary.new.tap do |s|
       total.make_amount 1768100, "PEN"
       total.make_category id: "1000", name: "IGV", tax_type_code: "VAT"
     end
-    
-    # line.total_amount = PaymentAmount[11735000, "PEN"]
   end
 end
