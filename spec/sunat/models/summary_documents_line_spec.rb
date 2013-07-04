@@ -90,7 +90,8 @@ describe SUNAT::SummaryDocumentsLine do
     end
     
     it 'can substract when some negative value are found' do
-      test_with_7_amounts [9823200, 0, 23200, -500, 0, 0, 1768100]
+      # the 5th value is a discount, so this should work
+      test_with_7_amounts [9823200, 0, 23200, 500, 500, 0, 1768100]
     end
   end
 end
