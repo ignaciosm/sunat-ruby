@@ -79,7 +79,6 @@ describe DailyReceiptSummary do
       correlative_number = @daily_receipt.correlative_number
       
       @daily_receipt.file_name.should eq("#{ruc}-RC-#{date}-#{correlative_number}")
-    end    
-  end
-  
+    end
+  end  
 end

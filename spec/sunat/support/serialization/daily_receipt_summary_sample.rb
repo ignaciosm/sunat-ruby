@@ -17,14 +17,7 @@ DailyReceiptSummary.new.tap do |s|
     line.add_allowance_charge 500, "PEN"
     line.add_allowance_discount 0, "PEN"
     
-    line.add_tax_total do |total|
-      total.make_amount 0, "PEN"
-      total.make_category id: "2000", name: "ISC", tax_type_code: "EXC"
-    end
-    
-    line.add_tax_total do |total|
-      total.make_amount 1768100, "PEN"
-      total.make_category id: "1000", name: "IGV", tax_type_code: "VAT"
-    end
+    line.add_tax_total :isc, 0, "PEN"
+    line.add_tax_total :igv, 1768100, "PEN"
   end
 end

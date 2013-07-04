@@ -17,10 +17,10 @@ module SUNAT
       end
     end
     
-    def make_category(options)      
+    def make_category(tax_abbr)
       sub_total do |sub_total|
         sub_total.tax_category = TaxCategory.new.tap do |cat|
-          cat.tax_scheme = TaxScheme.new(options)
+          cat.tax_scheme = TaxScheme.build_for(tax_abbr)
         end
       end
     end

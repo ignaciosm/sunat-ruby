@@ -68,11 +68,29 @@ describe SUNAT::SummaryDocumentsLine do
     end
   end
   
-  # line.allowance_charges << AllowanceCharge.new.tap do |charge|
-  #   charge.charge_indicator = "true"
-  #   charge.build_amount do |amount|
-  #     amount.currency = "PEN"
-  #     amount.value = 500
-  #   end
-  # end
+  describe '#total_amount' do
+    def test_with_7_amounts(amounts)
+      a, b, c, d, e, f, g = amounts
+      
+      line.add_billing_payment a, "PEN"
+      line.add_billing_payment b, "PEN"
+      line.add_billing_payment c, "PEN"
+    
+      line.add_allowance_charge d, "PEN"
+      line.add_allowance_discount e, "PEN"
+    
+      line.add_tax_total :isc, f, "PEN"
+      line.add_tax_total :igv, g, "PEN"
+      
+      line.total_amount.value.should eq(amounts.inject(&:+))
+    end
+        
+    it 'should sum all the positive amounts' do
+      test_with_7_amounts [9823200, 0, 23200, 500, 0, 0, 1768100]
+    end
+    
+    it 'can substract when some negative value are found' do
+      test_with_7_amounts [9823200, 0, 23200, -500, 0, 0, 1768100]
+    end
+  end
 end

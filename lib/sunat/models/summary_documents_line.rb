@@ -44,10 +44,11 @@ module SUNAT
       add_allowance_amount(amount: amount, currency: currency, is_discount: true)
     end
     
-    def add_tax_total
+    def add_tax_total(tax_name, amount, currency)      
       tax_total = TaxTotal.new
+      tax_total.make_amount(amount, currency)
+      tax_total.make_category(tax_name)
       tax_totals << tax_total
-      yield tax_total if block_given?
     end
     
     # 
