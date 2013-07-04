@@ -7,6 +7,7 @@ module SUNAT
     
     DEFAULT_CUSTOMIZATION_ID = "1.0"
     RUC_DOCUMENT_CODE = "6"
+    DNI_DOCUMENT_CODE = "1"
     
     property :issue_date,                 Date
     property :customization_id,           String

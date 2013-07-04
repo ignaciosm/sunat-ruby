@@ -52,13 +52,13 @@ module SUNAT
         end
         
         def make_accounting_customer_party(options)
-          ruc = options[:ruc]
+          dni = options[:dni]
           name = options[:name]
           
           self.accounting_customer_party = AccountingParty.new.tap do |p|
-            p.additional_account_id = Document::RUC_DOCUMENT_CODE
-            p.account_id = ruc
-            p.build_party_with_legal_name name
+            p.additional_account_id = Document::DNI_DOCUMENT_CODE
+            p.account_id = dni
+            p.build_party_with_name(name)
           end
         end
         

@@ -4,7 +4,7 @@ Receipt.new.tap do |i|
   i.ruc         = "20100113612"
   i.legal_name  = "K&G Laboratorios"
   
-  i.make_accounting_customer_party ruc: "20382170114", name: "CECI FARMA IMPORT S.R.L."
+  i.make_accounting_customer_party dni: "99999999", name: "Juan Robles Madero"
   
   i.add_tax_total :igv, 874500, "PEN"
   
