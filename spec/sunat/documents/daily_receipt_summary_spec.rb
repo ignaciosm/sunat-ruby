@@ -24,6 +24,10 @@ describe DailyReceiptSummary do
       summary.lines.should be_empty
     end
     
+    it 'should initialize with an id' do
+      summary.id.should_not be_empty
+    end
+    
     it "should have a default id starting with RC- and containing the current date in format YYYYMMDD" do
       formatted_date = Date.today.strftime("%Y%m%d")
       

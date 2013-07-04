@@ -2,6 +2,7 @@ module SUNAT
 
   class SummaryDocumentsLine
     include Model
+    include HasTaxTotals
 
     property :line_id,            String
     property :serial_id,          String
@@ -42,13 +43,6 @@ module SUNAT
     
     def add_allowance_discount(amount, currency)
       add_allowance_amount(amount: amount, currency: currency, is_discount: true)
-    end
-    
-    def add_tax_total(tax_name, amount, currency)      
-      tax_total = TaxTotal.new
-      tax_total.make_amount(amount, currency)
-      tax_total.make_category(tax_name)
-      tax_totals << tax_total
     end
     
     # 

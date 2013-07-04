@@ -8,7 +8,7 @@ describe SUNAT::Invoice do
     SUNAT::Invoice.new
   end
   
-  describe "#initialize" do
+  describe "#initialize" do    
     it "should begins with the correct DOCUMENT_TYPE_CODE" do
       invoice.invoice_type_code.should eq(SUNAT::Invoice::DOCUMENT_TYPE_CODE)
     end
@@ -29,26 +29,51 @@ describe SUNAT::Invoice do
     end
   end
   
-  describe "#file_name" do
+  describe "#add_line" do
+    it "should yield a line of InvoiceLine" do
+      invoice.add_line do |line|
+        line.should be_kind_of(InvoiceLine)
+      end
+    end
+    it "should add a line to the summary lines" do
+      initial_lines = invoice.lines.size
+      invoice.add_line { }
+      invoice.lines.size.should == initial_lines + 1
+    end
+    it "should add a line with a consecutive line_id beginning in 1" do
+      invoice.add_line { }
+      invoice.add_line { }
+      invoice.add_line { }
+      
+      invoice.lines[0].id.should == "1"
+      invoice.lines[1].id.should == "2"
+      invoice.lines[2].id.should == "3"
+    end
+  end
+  
+  context "with an existing and big invoice" do
+    
     before :all do
       @invoice = eval_support_script("serialization/invoice_sample")
     end
     
-    it "should have a voucher_serie" do
-      @invoice.voucher_serie.should_not be_nil
-    end
+    describe "#file_name" do    
+      it "should have a voucher_serie" do
+        @invoice.voucher_serie.should_not be_nil
+      end
     
-    it "should have a voucher_serie of 4 characters" do
-      @invoice.voucher_serie.size.should eq(4)
-    end
+      it "should have a voucher_serie of 4 characters" do
+        @invoice.voucher_serie.size.should eq(4)
+      end
     
-    it "include all the parts of the invoice file name" do
-      ruc = @invoice.ruc
-      kind = @invoice.class::DOCUMENT_TYPE_CODE
-      serie = @invoice.voucher_serie
-      correlative_number = @invoice.correlative_number
+      it "include all the parts of the invoice file name" do
+        ruc = @invoice.ruc
+        kind = @invoice.class::DOCUMENT_TYPE_CODE
+        serie = @invoice.voucher_serie
+        correlative_number = @invoice.correlative_number
       
-      @invoice.file_name.should eq("#{ruc}-#{kind}-#{serie}-#{correlative_number}")
+        @invoice.file_name.should eq("#{ruc}-#{kind}-#{serie}-#{correlative_number}")
+      end
     end
   end
 end

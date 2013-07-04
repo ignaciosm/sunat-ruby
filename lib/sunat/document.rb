@@ -13,6 +13,7 @@ module SUNAT
     property :accounting_supplier_party,  AccountingParty
     property :additional_monetary_totals, [MonetaryTotal]
     property :additional_properties,      [AdditionalProperty]
+    property :correlative_number,         String
     
     validates :accounting_supplier_party, existence: true
     
@@ -50,10 +51,6 @@ module SUNAT
     def legal_name=(name)
       self.accounting_supplier_party ||= AccountingParty.new
       self.accounting_supplier_party.build_party_with_legal_name(name)
-    end
-    
-    def correlative_number
-      "1" # TODO: i don't know if we really need a correlative number
     end
     
     def customization_id

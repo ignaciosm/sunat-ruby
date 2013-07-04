@@ -11,7 +11,7 @@ module SUNAT
         xml['cbc'].Description description
         xml['cac'].SellersItemIdentification do
           xml['cbc'].ID id
-        end
+        end if id
       end
     end
   end

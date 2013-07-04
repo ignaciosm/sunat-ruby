@@ -2,6 +2,8 @@ module SUNAT
   module PaymentDocument
         
     def self.extended(base)
+      base.send :include, HasTaxTotals
+      
       base.xml_root :Invoice
                 
       base.property :id,                              String # serie + correlative number
@@ -9,7 +11,7 @@ module SUNAT
       base.property :document_currency_code,          String
       base.property :accounting_customer_party,       AccountingParty
       base.property :legal_monetary_total,            PaymentAmount
-      base.property :invoice_lines,                   [InvoiceLine]
+      base.property :lines,                           [InvoiceLine]
       base.property :depatch_document_references,     [ReferralGuideline] # spanish: Guías de remisión
       base.property :additional_document_references,  [DocumentReference]
       base.property :tax_totals,                      [TaxTotal]
@@ -20,22 +22,44 @@ module SUNAT
       base.class_eval do
         def initialize
           super
-          self.invoice_lines = []
+          self.lines = []
           self.tax_totals = []
           self.depatch_document_references = []
           self.additional_document_references = []
           self.additional_monetary_totals = []
           self.additional_properties = []
           self.invoice_type_code = self.class::DOCUMENT_TYPE_CODE
+          self.document_currency_code = "PEN" # currency code by default
         end
         
         def file_name
           document_type_code = self.class::DOCUMENT_TYPE_CODE
-          "#{ruc}-#{document_type_code}-#{voucher_serie}-#{correlative_number}"
+          "#{ruc}-#{document_type_code}-#{id}"
         end
         
         def operation
           :send_bill
+        end
+        
+        def id
+          self[:id] ||= "#{voucher_serie}-#{correlative_number}"
+        end
+        
+        def add_line(&block)
+          line = InvoiceLine.new.tap(&block)
+          line.id = get_line_number.to_s
+          self.lines << line
+        end
+        
+        def make_accounting_customer_party(options)
+          ruc = options[:ruc]
+          name = options[:name]
+          
+          self.accounting_customer_party = AccountingParty.new.tap do |p|
+            p.additional_account_id = Document::RUC_DOCUMENT_CODE
+            p.account_id = ruc
+            p.build_party_with_legal_name name
+          end
         end
         
         def to_xml
@@ -54,10 +78,18 @@ module SUNAT
               legal_monetary_total.build xml, :PayableAmount
             end if legal_monetary_total.present?
             
-            invoice_lines.each do |invoice_line|
-              invoice_line.build_xml xml
+            lines.each do |line|
+              line.build_xml xml
             end            
           end
+        end
+        
+        private
+        
+        def get_line_number
+          @current_line_number ||= 0
+          @current_line_number += 1
+          @current_line_number
         end
 
       end

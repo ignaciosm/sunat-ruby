@@ -1,5 +1,5 @@
 Invoice.build do |i|
-  i.id                      = "F002-10"
+  i.correlative_number      = "10"
   i.invoice_type_code       = "01"
   i.document_currency_code  = "PEN"
   
@@ -47,7 +47,7 @@ Invoice.build do |i|
     end
   end
   
-  i.invoice_lines << InvoiceLine.build do |il|
+  i.lines << InvoiceLine.build do |il|
     il.id = "1"
             
     il.build_invoiced_quantity do |q|
