@@ -1,4 +1,4 @@
-Invoice.build do |i|
+Invoice.new.tap do |i|
   i.correlative_number      = "10"
   i.invoice_type_code       = "01"
   i.document_currency_code  = "PEN"

@@ -1,4 +1,4 @@
-Receipt.build do |i|
+Receipt.new.tap do |i|
   i.correlative_number  = "10"
   
   i.ruc         = "20100113612"
