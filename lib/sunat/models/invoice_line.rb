@@ -34,6 +34,14 @@ module SUNAT
       self.price = PaymentAmount[amount, currency]
     end
     
+    def make_paid_price(amount, currency)
+      make_reference_price amount, currency, :add_paid_alternative_condition_price, :is_for_paid_price?
+    end
+    
+    def make_referencial_unitary_price(amount, currency)
+      make_reference_price amount, currency, :add_referencial_condition_price, :is_for_referencial_price?
+    end
+    
     def build_xml(xml)
       xml['cac'].InvoiceLine do
         xml['cbc'].ID id
@@ -55,5 +63,24 @@ module SUNAT
         end
       end
     end
+    
+    private
+    
+    def make_reference_price(amount, currency, add_condition_method, acp_checker_method)
+      self.pricing_reference ||= PriceReference.new
+      self.pricing_reference.tap do |ref|
+        if ref.alternative_condition_prices.empty?
+          ref.send(add_condition_method, amount, currency)
+        else
+          acp_to_edit = ref.alternative_condition_prices.find { |acp| acp.send(acp_checker_method) }
+          if acp_to_edit
+            acp_to_edit.price_amount = PaymentAmount[amount, currency]
+          else
+            ref.send(add_condition_method, amount, currency)
+          end
+        end
+      end
+    end
+    
   end
 end

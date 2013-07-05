@@ -34,5 +34,37 @@ describe SUNAT::InvoiceLine do
       line.price.currency.should == "PEN"
     end
   end
+  
+  shared_examples 'a price reference generator' do |method, code|
+    it 'should create a pricing reference with one AlternativeConditionPrice with the code 01 and the price given' do
+      line.send(method, 17288000, "PEN")
+      
+      line.pricing_reference.tap do |ref|
+        ref.should_not be_nil
+        ref.should be_kind_of(SUNAT::PriceReference)
+        ref.alternative_condition_prices.size.should == 1
+        ref.alternative_condition_prices.first.tap do |acp|
+          acp.should be_kind_of(SUNAT::AlternativeConditionPrice)
+          acp.price_type.should == code
+          acp.price_amount.currency.should == "PEN"
+          acp.price_amount.value.should == 17288000
+        end
+      end
+    end
+    
+    it 'should create only one AlternativeConditionPrice if is called twice' do
+      line.send(method, 17288000, "PEN")
+      line.send(method, 17288000, "PEN")
+      line.pricing_reference.alternative_condition_prices.size.should == 1
+    end
+  end
+  
+  describe '#make_paid_price' do
+    it_behaves_like 'a price reference generator', :make_paid_price, '01'
+  end
+  
+  describe '#make_referencial_unitary_price' do
+    it_behaves_like 'a price reference generator', :make_referencial_unitary_price, '02'
+  end
 
 end

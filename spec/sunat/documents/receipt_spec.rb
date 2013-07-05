@@ -8,7 +8,7 @@ describe SUNAT::Receipt do
     SUNAT::Receipt.new
   end
   
-  describe "#initialize" do    
+  describe "#initialize" do
     it "should begins with the correct DOCUMENT_TYPE_CODE" do
       receipt.invoice_type_code.should == SUNAT::Receipt::DOCUMENT_TYPE_CODE
     end

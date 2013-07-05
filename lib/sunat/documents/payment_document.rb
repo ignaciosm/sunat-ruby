@@ -68,7 +68,13 @@ module SUNAT
             xml['cbc'].DocumentCurrencyCode document_currency_code
             
             accounting_supplier_party.build_xml xml, :AccountingSupplierParty
-            accounting_customer_party.build_xml xml, :AccountingCustomerParty
+            
+            if accounting_customer_party.present?
+              accounting_customer_party.build_xml xml, :AccountingCustomerParty
+            else
+              # sunat said that, if no customer exists, we must use a dash.
+              xml['cac'].AccountingCustomerParty "-"
+            end
             
             tax_totals.each do |total|
               total.build_xml xml
