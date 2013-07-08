@@ -1,6 +1,8 @@
 Invoice.new.tap do |invoice|
   invoice.correlative_number      = "10"
   
+  # TODO: Research this for all the documents.
+  # 
   # invoice.additional_monetary_totals << MonetaryTotal.new({
   #   id: '1001',
   #   payable_amount:   PaymentAmount.new(currency: 'PEN', value: 10000),
