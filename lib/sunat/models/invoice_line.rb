@@ -11,6 +11,11 @@ module SUNAT
     property :tax_totals,             [TaxTotal]
     property :items,                  [Item]
     
+    KNOWN_UNIT_CODES = {
+      :product => "NIU",
+      :service => "ZZ"
+    }
+    
     def initialize
       self.tax_totals = []
       self.items = []
@@ -23,7 +28,12 @@ module SUNAT
     end
     
     def make_quantity(qty, unit_code)
-      self.invoiced_quantity = Quantity.new(quantity: qty, unit_code: unit_code)
+      code = if unit_code.is_a?(Symbol) and real_code = KNOWN_UNIT_CODES[unit_code]
+        real_code
+      else
+        unit_code
+      end
+      self.invoiced_quantity = Quantity.new(quantity: qty, unit_code: code)
     end
     
     def make_selling_price(amount, currency)

@@ -28,7 +28,11 @@ module SUNAT
     
     def build_xml(xml, tag_name)
       xml['cac'].send tag_name do
-        xml['cbc'].CustomerAssignedAccountID  account_id
+        # IMPORTANT: We don't know how to handle the case
+        # when there is no dni. We are assuming that, because
+        # sunat said that the fields are required, the the dni
+        # field must be empty string when nil.
+        xml['cbc'].CustomerAssignedAccountID  (account_id || '')
         xml['cbc'].AdditionalAccountID        additional_account_id
         
         party.build_xml xml

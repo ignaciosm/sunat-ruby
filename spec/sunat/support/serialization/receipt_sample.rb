@@ -1,17 +1,18 @@
-Receipt.new.tap do |i|
-  i.correlative_number  = "10"
+Receipt.new.tap do |receipt|
+  receipt.correlative_number  = "10"
   
-  i.ruc         = "20100113612"
-  i.legal_name  = "K&G Laboratorios"
+  receipt.ruc         = "20100113612"
+  receipt.legal_name  = "K&G Laboratorios"
   
   # remember, it's optional
-  i.make_accounting_customer_party dni: "99999999", name: "Juan Robles Madero"
+  # receipt.make_accounting_customer_party dni: "99999999", name: "Juan Robles Madero"
+  receipt.make_accounting_customer_party name: "Juan Robles Madero"
   
-  i.add_tax_total :igv, 874500, "PEN"
+  receipt.add_tax_total :igv, 874500, "PEN"
   
-  i.add_line do |line|
+  receipt.add_line do |line|
     line.make_description "CAPTOPRIL 25mg"
-    line.make_quantity 300, "CS"
+    line.make_quantity 300, :product
     line.make_selling_price 17289000, "PEN"
     line.make_unitary_price 76800, "PEN"
     

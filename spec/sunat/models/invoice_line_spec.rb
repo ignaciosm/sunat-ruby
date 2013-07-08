@@ -13,6 +13,13 @@ describe SUNAT::InvoiceLine do
       line.invoiced_quantity.quantity.should == 300
       line.invoiced_quantity.unit_code.should == "CS"
     end
+    
+    it 'should set ZZ when the argument is the symbol :service and NIU when :product' do
+      line.make_quantity 300, :product
+      line.invoiced_quantity.unit_code.should == "NIU"
+      line.make_quantity 300, :service
+      line.invoiced_quantity.unit_code.should == "ZZ"
+    end
   end
   
   describe '#make_selling_price' do

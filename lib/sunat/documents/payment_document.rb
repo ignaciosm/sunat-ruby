@@ -56,8 +56,10 @@ module SUNAT
           name = options[:name]
           
           self.accounting_customer_party = AccountingParty.new.tap do |p|
-            p.additional_account_id = Document::DNI_DOCUMENT_CODE
-            p.account_id = dni
+            if dni.present?
+              p.additional_account_id = Document::DNI_DOCUMENT_CODE
+              p.account_id = dni
+            end
             p.build_party_with_name(name)
           end
         end
@@ -69,10 +71,10 @@ module SUNAT
             
             accounting_supplier_party.build_xml xml, :AccountingSupplierParty
             
+            # sunat said that, if no customer exists, we must use a dash.
             if accounting_customer_party.present?
               accounting_customer_party.build_xml xml, :AccountingCustomerParty
             else
-              # sunat said that, if no customer exists, we must use a dash.
               xml['cac'].AccountingCustomerParty "-"
             end
             
