@@ -17,9 +17,9 @@ describe 'serialization of an invoice' do
     date.text.should eq(Date.today.strftime("%Y-%m-%d"))
   end
   
-  it "should insert the payment amount into the xml body" do
-    payable_amount_tag = @xml.xpath("//sac:AdditionalMonetaryTotal/cbc:PayableAmount")
-    payable_amount_tag.count.should >= 0
-    payable_amount_tag.text.should eq(@invoice.additional_monetary_totals.first.payable_amount.to_s)
-  end
+  # it "should insert the payment amount into the xml body" do
+  #   payable_amount_tag = @xml.xpath("//sac:AdditionalMonetaryTotal/cbc:PayableAmount")
+  #   payable_amount_tag.count.should >= 0
+  #   payable_amount_tag.text.should eq(@invoice.additional_monetary_totals.first.payable_amount.to_s)
+  # end
 end
