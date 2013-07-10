@@ -4,7 +4,8 @@ module SUNAT
     
     property :alternative_condition_prices, [AlternativeConditionPrice]
     
-    def initialize
+    def initialize(*args)
+      super(*args)
       self.alternative_condition_prices = []
     end
     

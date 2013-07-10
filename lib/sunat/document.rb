@@ -24,8 +24,8 @@ module SUNAT
       end
     end
     
-    def initialize
-      super
+    def initialize(*args)
+      super(*args)
       self.issue_date = Date.today
       self.additional_properties = []
       self.additional_monetary_totals = []

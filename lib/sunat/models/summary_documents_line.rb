@@ -20,7 +20,8 @@ module SUNAT
     
     validates :document_type_code, tax_document_type_code: true
     
-    def initialize
+    def initialize(*args)
+      super(*args)
       self.billing_payments = []
       self.allowance_charges = []
       self.tax_totals = []

@@ -6,7 +6,8 @@ module SUNAT
     property :tax_amount, PaymentAmount
     property :sub_totals, [TaxSubTotal]
     
-    def initialize
+    def initialize(*args)
+      super(*args)
       self.sub_totals = []
     end
     

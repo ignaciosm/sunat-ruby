@@ -16,7 +16,8 @@ module SUNAT
       :service => "ZZ"
     }
     
-    def initialize
+    def initialize(*args)
+      super(*args)
       self.tax_totals = []
       self.items = []
     end

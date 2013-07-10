@@ -11,7 +11,8 @@ module SUNAT
     validates :party_legal_entities, existence: true, not_empty: true
     validates :postal_addresses, existence: true, not_empty: true
     
-    def initialize
+    def initialize(*args)
+      super(*args)
       self.party_legal_entities = []
       self.postal_addresses = []
     end

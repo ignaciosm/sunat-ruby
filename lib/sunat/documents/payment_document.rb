@@ -20,14 +20,12 @@ module SUNAT
       base.validates :invoice_type_code, tax_document_type_code: true
       
       base.class_eval do
-        def initialize
-          super
+        def initialize(*args)
+          super(*args)
           self.lines = []
           self.tax_totals = []
           self.depatch_document_references = []
           self.additional_document_references = []
-          self.additional_monetary_totals = []
-          self.additional_properties = []
           self.invoice_type_code = self.class::DOCUMENT_TYPE_CODE
           self.document_currency_code = "PEN" # currency code by default
         end

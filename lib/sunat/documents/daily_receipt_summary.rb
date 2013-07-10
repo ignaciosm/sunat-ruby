@@ -17,8 +17,8 @@ module SUNAT
     
     validates :lines, not_empty: true
     
-    def initialize
-      super
+    def initialize(*args)
+      super(*args)
       self.notes  ||= []
       self.lines  ||= []
       self.id     ||= default_id
