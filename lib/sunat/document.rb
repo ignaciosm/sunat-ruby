@@ -26,9 +26,9 @@ module SUNAT
     
     def initialize(*args)
       super(*args)
-      self.issue_date = Date.today
-      self.additional_properties = []
-      self.additional_monetary_totals = []
+      self.issue_date ||= Date.today
+      self.additional_properties ||= []
+      self.additional_monetary_totals ||= []
     end
     
     def file_name

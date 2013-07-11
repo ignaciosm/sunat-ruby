@@ -8,7 +8,7 @@ module SUNAT
     
     def initialize(*args)
       super(*args)
-      self.sub_totals = []
+      self.sub_totals ||= []
     end
     
     def make_amount(amount, currency)

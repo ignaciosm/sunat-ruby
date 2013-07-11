@@ -18,8 +18,8 @@ module SUNAT
     
     def initialize(*args)
       super(*args)
-      self.tax_totals = []
-      self.items = []
+      self.tax_totals ||= []
+      self.items ||= []
     end
     
     def make_description(description)

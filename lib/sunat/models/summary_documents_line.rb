@@ -22,11 +22,10 @@ module SUNAT
     
     def initialize(*args)
       super(*args)
-      self.billing_payments = []
-      self.allowance_charges = []
-      self.tax_totals = []
-      
-      self.document_type_code = receipt_document_code
+      self.billing_payments   ||= []
+      self.allowance_charges  ||= []
+      self.tax_totals         ||= []
+      self.document_type_code ||= receipt_document_code
     end
     
     def add_billing_payment(amount, currency)

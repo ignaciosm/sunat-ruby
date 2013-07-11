@@ -4,7 +4,7 @@ module SUNAT
   
     def initialize(*args)
       super(*args)
-      self.document_type_code = DOCUMENT_CODE
+      self.document_type_code ||= DOCUMENT_CODE
     end
   end
 end

@@ -13,8 +13,8 @@ module SUNAT
     
     def initialize(*args)
       super(*args)
-      self.party_legal_entities = []
-      self.postal_addresses = []
+      self.party_legal_entities ||= []
+      self.postal_addresses     ||= []
     end
     
     def build_xml(xml)

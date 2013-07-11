@@ -22,12 +22,12 @@ module SUNAT
       base.class_eval do
         def initialize(*args)
           super(*args)
-          self.lines = []
-          self.tax_totals = []
-          self.depatch_document_references = []
-          self.additional_document_references = []
-          self.invoice_type_code = self.class::DOCUMENT_TYPE_CODE
-          self.document_currency_code = "PEN" # currency code by default
+          self.lines ||= []
+          self.tax_totals ||= []
+          self.depatch_document_references ||= []
+          self.additional_document_references ||= []
+          self.invoice_type_code ||= self.class::DOCUMENT_TYPE_CODE
+          self.document_currency_code ||= "PEN" # currency code by default
         end
         
         def file_name

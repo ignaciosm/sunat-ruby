@@ -6,7 +6,7 @@ module SUNAT
     
     def initialize(*args)
       super(*args)
-      self.alternative_condition_prices = []
+      self.alternative_condition_prices ||= []
     end
     
     def add_paid_alternative_condition_price(amount, currency)
