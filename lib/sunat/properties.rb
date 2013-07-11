@@ -28,7 +28,8 @@ module SUNAT
     private
     
     def get_property(name)
-      self.class.properties[name.to_sym]
+      # not only search in the class, search in the superclass too if the superclass can respond to properties[]. Using a class method for this
+      self.class.search_property(name)
     end
 
     module ClassMethods
@@ -45,7 +46,19 @@ module SUNAT
 
         property
       end
-
+      
+      # Recursive search the property in the superclass chain
+      def search_property(name)        
+        name = name.to_sym
+        
+        if properties[name]
+          properties[name]
+        elsif superclass.respond_to?(:search_property)
+          superclass.search_property(name)
+        else
+          nil
+        end
+      end
 
       protected
 

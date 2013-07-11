@@ -42,6 +42,8 @@ module SUNAT
       obj   = nil
       if value.is_a?(type)
         obj = value
+      elsif type == Date
+        obj = type.parse(value)
       else
         obj = type.new(value)
       end
