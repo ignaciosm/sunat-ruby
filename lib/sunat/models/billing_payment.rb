@@ -5,6 +5,8 @@ module SUNAT
 
     property :paid_amount,    PaymentAmount
     property :instruction_id, String
+
+    validates :instruction_id, :inclusion => SUNAT::ANNEX::CATALOG_11
     
     def build_xml(xml)
       xml['sac'].BillingPayment do
@@ -12,6 +14,7 @@ module SUNAT
       end
       xml['cbc'].InstructionID instruction_id
     end
+
   end
 
 end

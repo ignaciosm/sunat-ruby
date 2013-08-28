@@ -14,6 +14,9 @@ require "sunat/property"
 require "sunat/validations"
 require "sunat/model"
 
+# Annex
+require "sunat/annex"
+
 # Models
 require "sunat/models/payment_amount"
 require "sunat/models/tax_scheme"

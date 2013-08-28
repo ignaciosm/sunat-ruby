@@ -27,7 +27,7 @@ module SUNAT
     end
     
     class << self
-      def [](value, currency)
+      def [](value, currency = "PEN")
         self.new.tap do |payment|
           payment.value = value
           payment.currency = currency

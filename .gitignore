@@ -19,3 +19,4 @@ tmp
 bin
 SECRET.md
 .ruby-version
+examples/config.rb

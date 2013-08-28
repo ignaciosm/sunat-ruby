@@ -23,10 +23,8 @@ SUNAT.configure do |config|
   end
   
   config.signature do |s|
-    s.id          = "2010945"
     s.party_id    = "20100454523"
     s.party_name  = "SOPORTE TECNOLOGICO EIRL"
-    s.uri         = "#SignST"
     s.cert_file   = File.join(Dir.pwd, 'spec', 'sunat', 'support', 'keys', 'sunat.crt')
     s.pk_file     = File.join(Dir.pwd, 'spec', 'sunat', 'support', 'keys', 'sunat_decrypted.key')
   end

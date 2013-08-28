@@ -16,7 +16,37 @@ Or install it yourself as:
 
     $ gem install sunat
 
-## Usage
+## Configuration
+
+Prepare the SUNAT library by defining the configuration somewhere in your project as follows:
+
+  SUNAT.configure do |config|
+    config.credentials do |c|
+      # Regular credentials provided by SUNAT
+      c.ruc       = "123456780"
+      c.username  = "USERNAME"
+      c.password  = "PASSWORD"
+    end
+    
+    config.signature do |s|
+      # A company ID (Should be RUC)
+      s.party_id    = "20100454523"
+
+      # The name of the company
+      s.party_name  = "SOPORTE TECNOLOGICO EIRL"
+
+      # SUNAT validated certificate
+      s.cert_file   = File.join(Dir.pwd, 'config', 'keys', 'sunat.crt')
+
+      # Password-less private key used to sign certificate
+      s.pk_file     = File.join(Dir.pwd, 'config', 'keys', 'sunat.key')
+    end
+  end
+
+
+
+
+## Testing
 
 Set the next ENV variables: SUNAT_RUC, SUNAT_USERNAME and SUNAT_PASSWORD.
 They must be secret!
@@ -37,6 +67,12 @@ In Bash:
 ## Serialization
 
 Every model can be serialized and de-serialized from JSON. This is extremely useful for storing a declaration a more readily usable form.
+
+
+## Homologation
+
+SUNAT requires that each document you'll be sending goes through an homologation process. See the examples directory for sample code that will help you get started.
+
 
 
 ## Contributing

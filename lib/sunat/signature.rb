@@ -15,6 +15,15 @@ module SUNAT
     attr_accessor :id, :party_id, :party_name, :uri, :cert_file, :pk_file
     
     attr_reader :certificate, :private_key
+
+    # Default ID
+    def id
+      @id || "IDSignKG"
+    end
+
+    def uri
+      @uri || "signatureKG"
+    end
     
     def cert_file=(file)
       @cert_file = file
@@ -57,7 +66,7 @@ module SUNAT
       
         xml['cac'].DigitalSignatureAttachment do
           xml['cac'].ExternalReference do
-            xml['cbc'].URI uri
+            xml['cbc'].URI "##{uri}"
           end
         end
       end
