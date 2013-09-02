@@ -7,6 +7,12 @@ describe SUNAT::PaymentAmount do
       amount.currency.should == "PEN"
       amount.value.should == 117350
     end
+
+    it "should accept amount without currency" do
+      amount = SUNAT::PaymentAmount[11289]
+      amount.currency.should eql('PEN')
+      amount.value.should eql(11289)
+    end
   end
   
   describe 'to_s' do

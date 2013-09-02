@@ -98,8 +98,8 @@ module SUNAT
       '1005', # Sub total de venta 
       '2001', # Percepciones
       '2002', # Retenciones
-      '2003'  # Detracciones
-      '2004'  # Bonificaciones
+      '2003', # Detracciones
+      '2004', # Bonificaciones
       '2005'  # Total descuentos
     ]
 

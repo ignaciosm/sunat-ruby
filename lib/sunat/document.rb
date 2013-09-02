@@ -80,8 +80,6 @@ module SUNAT
       @signature ||= SUNAT::SIGNATURE
     end
 
-    protected
-
     def to_xml(&block)
       # We create a decorator responsible to build the xml in top
       # of this document
@@ -94,7 +92,7 @@ module SUNAT
     end
 
     # returns a savon response (an httpi response)
-    def send
+    def deliver!
       sender = Delivery::Sender.new(file_name, to_zip, operation)
       sender.call
     end

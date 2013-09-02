@@ -5,8 +5,11 @@ module SUNAT
     class Sender
       attr_reader :name, :encoded_zip, :operation, :client, :operation
       
-      WSDL = "https://www.sunat.gob.pe/ol-ti-itcpgem/billService?wsdl"
-      # WSDL = "http://64.76.79.139/ol-ti-itcpgem-sqa/billService?wsdl"
+      # PRODUCTION
+      # WSDL = "https://www.sunat.gob.pe/ol-ti-itcpgem/billService?wsdl"
+
+      # HOMOLOGATION
+      WSDL = "https://www.sunat.gob.pe/ol-ti-itcpgem-sqa/billService?wsdl"
       
       def initialize(name, encoded_zip, operation)
         @operation = operation
@@ -42,6 +45,7 @@ module SUNAT
         
         Savon.client(
           wsdl:               WSDL,
+          namespace:          "http://service.sunat.gob.pe",
           wsse_auth:          [login, password],
           ssl_cert_file:      cert_file,
           ssl_cert_key_file:  pk_file,

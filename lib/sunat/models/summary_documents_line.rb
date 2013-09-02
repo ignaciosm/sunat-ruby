@@ -28,12 +28,11 @@ module SUNAT
       self.document_type_code ||= receipt_document_code
     end
     
-    def add_billing_payment(amount, currency = "PEN")
+    def add_billing_payment(code, amount, currency = "PEN")
       payment = BillingPayment.new.tap do |billing|
-        billing.paid_amount = PaymentAmount[amount, currency]
-        billing.instruction_id = "%.2d" % billing_payments.size.next
+        billing.paid_amount    = PaymentAmount[amount, currency]
+        billing.instruction_id = code
       end
-      
       billing_payments << payment
     end
     

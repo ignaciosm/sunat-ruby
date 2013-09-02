@@ -19,20 +19,19 @@ describe SUNAT::SummaryDocumentsLine do
   
   describe '#add_billing_payment' do
     it 'should add a billing_payment/paid_amount to the line' do
-      line.add_billing_payment(1200, "PEN")
+      line.add_billing_payment('01', 1200, "PEN")
       
       line.billing_payments.size.should eq(1)
       line.billing_payments.first.should be_kind_of(SUNAT::BillingPayment)
       line.billing_payments.first.paid_amount.should be_kind_of(SUNAT::PaymentAmount)
-      line.billing_payments.first.instruction_id.should_not be_nil
+      line.billing_payments.first.should be_valid
+      line.billing_payments.first.instruction_id.should eql('01')
     end
-    
-    it 'should increment the instruction_id' do
-      5.times do
-        line.add_billing_payment(1200, "PEN")
-      end
-      
-      line.billing_payments.map(&:instruction_id).should == ['01', '02', '03', '04', '05']
+
+    it 'should accept ammount without currency' do
+      line.add_billing_payment('01', 1200)
+      line.billing_payments.first.should be_valid
+      line.billing_payments.first.paid_amount.currency.should eql('PEN')
     end
   end
   
@@ -72,9 +71,9 @@ describe SUNAT::SummaryDocumentsLine do
     def test_with_7_amounts(amounts)
       a, b, c, d, e, f, g = amounts
       
-      line.add_billing_payment a, "PEN"
-      line.add_billing_payment b, "PEN"
-      line.add_billing_payment c, "PEN"
+      line.add_billing_payment '01', a, "PEN"
+      line.add_billing_payment '02', b, "PEN"
+      line.add_billing_payment '03', c, "PEN"
     
       line.add_allowance_charge d, "PEN"
       line.add_allowance_discount e, "PEN"
