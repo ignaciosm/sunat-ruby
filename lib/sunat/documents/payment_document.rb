@@ -6,7 +6,7 @@ module SUNAT
       
       base.xml_root :Invoice
                 
-      base.property :id,                              String # serie + correlative number
+      base.property :id,                              String # serial + correlative number
       base.property :invoice_type_code,               String
       base.property :document_currency_code,          String
       base.property :accounting_customer_party,       AccountingParty
@@ -16,6 +16,7 @@ module SUNAT
       base.property :additional_document_references,  [DocumentReference]
       base.property :tax_totals,                      [TaxTotal]
       
+      base.validates :id, presence:true, format: {with:Proc.new{ self.class.ID_FORMAT }}
       base.validates :document_currency_code, existence: true, currency_code: true
       base.validates :invoice_type_code, tax_document_type_code: true
       
@@ -37,10 +38,6 @@ module SUNAT
         
         def operation
           :send_bill
-        end
-        
-        def id
-          self[:id] ||= "#{voucher_serie}-#{correlative_number}"
         end
         
         def add_line(&block)

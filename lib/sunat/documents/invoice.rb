@@ -10,8 +10,7 @@ module SUNAT
     
     DOCUMENT_TYPE_CODE = '01' # sunat code in catalog #1
     
-    def voucher_serie
-      "F001" # TODO: i really don't understand what should be content of the three characters after B.
-    end
+    ID_FORMAT = /F[A-Z\d]{3}-\d{1,8}/
+
   end
 end

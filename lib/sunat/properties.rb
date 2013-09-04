@@ -65,7 +65,7 @@ module SUNAT
       def define_property_methods(property)
         # Getter
         define_method(property.name) do
-          get_attribute(property.name)
+          get_attribute(property.name) || property.default
         end
         # Setter
         define_method "#{property.name}=" do |value|

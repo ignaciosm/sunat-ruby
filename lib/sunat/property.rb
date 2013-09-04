@@ -1,9 +1,9 @@
 module SUNAT
   class Property
 
-    attr_accessor :name, :type
+    attr_accessor :name, :type, :default
 
-    def initialize(name, type)
+    def initialize(name, type, opts = {})
       self.name = name.to_sym
 
       # Always set type to base type
@@ -16,6 +16,9 @@ module SUNAT
       end
 
       self.type = klass
+
+      # Handle options
+      self.default = opts[:default]
     end
 
     def to_s

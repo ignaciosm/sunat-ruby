@@ -98,7 +98,7 @@ module SUNAT
     end
 
     def to_zip
-      @zip ||= Delivery::Chef.new(file_name, to_xml).prepare
+      @zip ||= Delivery::Chef.new(file_name + ".xml", to_xml).prepare
     end
   end
 end

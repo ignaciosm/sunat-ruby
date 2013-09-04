@@ -1,5 +1,5 @@
 Invoice.new.tap do |invoice|
-  invoice.correlative_number      = "10"
+  invoice.id  = "FF11-00000001"
   
   # TODO: Research this for all the documents.
   # 

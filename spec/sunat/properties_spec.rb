@@ -97,6 +97,16 @@ describe SUNAT::Properties do
       @obj.aux.age.should eq(18)
     end
 
+    it "should return nil on property with no default" do
+      @model.property :nickname, String
+      @obj.nickname.should be_nil
+    end
+
+    it "should create helper method with support for default values" do
+      @model.property :name, String, :default => "Sam"
+      @obj.name.should eql("Sam")
+    end
+
   end
 
 

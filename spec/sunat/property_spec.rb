@@ -33,6 +33,11 @@ describe SUNAT::Property do
       prop.use_casted_array?.should be_true
     end
 
+    it "should accept a default option" do
+      prop = klass.new(:name, String, :default => "Freddo")
+      prop.default.should eql("Freddo")
+    end
+
   end
 
   describe "#to_s" do

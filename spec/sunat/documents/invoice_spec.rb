@@ -69,10 +69,9 @@ describe SUNAT::Invoice do
       it "include all the parts of the invoice file name" do
         ruc = @invoice.ruc
         kind = @invoice.class::DOCUMENT_TYPE_CODE
-        serie = @invoice.voucher_serie
-        correlative_number = @invoice.correlative_number
-      
-        @invoice.file_name.should eq("#{ruc}-#{kind}-#{serie}-#{correlative_number}")
+        id = @invoice.id
+
+        @invoice.file_name.should eq("#{ruc}-#{kind}-#{id}")
       end
     end
   end

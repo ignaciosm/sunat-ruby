@@ -9,9 +9,8 @@ module SUNAT
     extend PaymentDocument
     
     DOCUMENT_TYPE_CODE = '03' # sunat code in catalog #1
+
+    ID_FORMAT = /B[A-Z\d]{3}-\d{1,8}/
     
-    def voucher_serie
-      "B001" # TODO: i really don't understand what should be content of the three characters after B.
-    end
   end
 end

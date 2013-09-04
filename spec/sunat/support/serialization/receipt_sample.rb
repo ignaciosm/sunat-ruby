@@ -1,5 +1,5 @@
 Receipt.new.tap do |receipt|
-  receipt.correlative_number  = "10"
+  receipt.id  = "BB11-00000001"
   
   receipt.ruc         = "20100113612"
   receipt.legal_name  = "K&G Laboratorios"
