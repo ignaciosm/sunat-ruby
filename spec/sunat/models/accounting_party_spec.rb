@@ -21,24 +21,29 @@ describe do
       expect_valid accounting_party,    :additional_account_id, valid_code
     end
   end
-  
-  describe "#build_party_with_name" do
-    it "should create a party with a party_name object with a name from the accounting_party object" do
-      name = "name"
-      accounting_party.build_party_with_name(name)
-      accounting_party.party.name.should eq(name)
+
+  describe ".new" do
+    it "should build a new accounting party with name and ruc" do
+      ap = SUNAT::AccountingParty.new(:name => "Test Company", :ruc => "123456789")
+      ap.account_id.should eql("123456789")
+      ap.additional_account_id.should eql(SUNAT::Document::RUC_DOCUMENT_CODE)
+      ap.party.party_legal_entities.first.registration_name.should eql("Test Company")
     end
-    
-    it "should create a party with some part_legal_entity with a registration_name from the accounting_party object" do
-      a, b = "a", "b"
-      accounting_party.build_party_with_legal_name a, b
-      
-      names = accounting_party.party.party_legal_entities.map do |entity|
-        entity.registration_name
-      end
-      
-      names.should include(a)
-      names.should include(b)
+
+    it "should build new accounting party with name and dni" do
+      ap = SUNAT::AccountingParty.new(:name => "Test Company", :dni => "123456789")
+      ap.account_id.should eql("123456789")
+      ap.additional_account_id.should eql(SUNAT::Document::DNI_DOCUMENT_CODE)
+      ap.party.name.should eql("Test Company")
     end
+
+    it "should still continue to operatre with normal hash" do
+      ap = SUNAT::AccountingParty.new(:name => "Test Company", :ruc => "123456789")
+      ap = SUNAT::AccountingParty.new(ap.as_json)
+      ap.account_id.should eql("123456789")
+      ap.additional_account_id.should eql(SUNAT::Document::RUC_DOCUMENT_CODE)
+      ap.party.party_legal_entities.first.registration_name.should eql("Test Company")
+    end   
   end
+  
 end

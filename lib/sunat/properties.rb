@@ -71,34 +71,6 @@ module SUNAT
         define_method "#{property.name}=" do |value|
           set_attribute(property.name, value)
         end
-        
-        # Build method
-        # Instantiates the object based on the property
-        # set its value and attach it to a block
-        # 
-        # Usage:
-        # 
-        # class Profile
-        #   property :name, String
-        # end
-        # 
-        # class User
-        #   property :profile, Profile
-        # end
-        # 
-        # user = User.new
-        # user.build_profile do |profile|
-        #   profile.name = "Profile Name"
-        # end
-        # 
-        if property.type.respond_to?(:new)
-          define_method "build_#{property.name}" do |*args, &block|
-            value = property.type.new(*args)
-            set_attribute(property.name, value)
-            block.call(value)
-            value
-          end
-        end
       end
 
     end

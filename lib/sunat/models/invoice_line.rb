@@ -1,15 +1,47 @@
-module SUNAT  
+module SUNAT 
+ 
+  # Generate a new line for an invoice.
+  #
+  # Helpers are included to make the process a little easier.
+  #
+  # To build a new item quickly, provide the following non-standard attributes
+  # when instantiating the object. They will be used to automatically generate
+  # the complex structure used in the XML.
+  #
+  #  * :code - the item id (optional)
+  #  * :description - name of product
+  #  * :quantity - converted to invoiced_quantity
+  #  * :unit - currently either :product, :service, or string from UN/ECE (optional, default is :product)
+  #  * :price - the price charged of a single item without taxes, either as intenger for PEN, or PaymentAmount model.
+  #  * :total - effectively price x quantity, minus any discounts!
+  #  * :list_price - special unit price of item including tax (see below)
+  #
+  # The list price requires a special "PriceTypeCode" as per Catalog 16. (See annex.) By default
+  # this will automatically be set to type '01', for regular prices. If however this item is included
+  # for free, provide the list price as a hash as follows:
+  #
+  #    :list_price => {:amount => 12345, :free => true}
+  #
+  # or directly:
+  #
+  #    line.pricing_reference = {:amount => 12345, :free => true} 
+  #
+  # See the PricingReference model for more details.
+  #
+  # Handling taxes is also complicated, see the TaxTotal model
+  # for helper method details.
+  #
   class InvoiceLine
     include Model
     include HasTaxTotals
     
     property :id,                     String
     property :invoiced_quantity,      Quantity
-    property :line_extension_amount,  PaymentAmount # selling value
-    property :price,                  PaymentAmount # price
-    property :pricing_reference,      PriceReference
+    property :line_extension_amount,  PaymentAmount    # total
+    property :price,                  PaymentAmount    # price
+    property :pricing_reference,      PricingReference # list price with tax
+    property :item,                   Item
     property :tax_totals,             [TaxTotal]
-    property :items,                  [Item]
     
     KNOWN_UNIT_CODES = {
       :product => "NIU",
@@ -17,42 +49,9 @@ module SUNAT
     }
     
     def initialize(*args)
-      super(*args)
-      self.tax_totals ||= []
-      self.items ||= []
+      super(parse_attributes(*args))
     end
-    
-    def make_description(description)
-      self.items << Item.new.tap do |item|
-        item.description = description
-      end
-    end
-    
-    def make_quantity(qty, unit_code)
-      code = if unit_code.is_a?(Symbol) and real_code = KNOWN_UNIT_CODES[unit_code]
-        real_code
-      else
-        unit_code
-      end
-      self.invoiced_quantity = Quantity.new(quantity: qty, unit_code: code)
-    end
-    
-    def make_selling_price(amount, currency)
-      self.line_extension_amount = PaymentAmount[amount, currency]
-    end
-    
-    def make_unitary_price(amount, currency)
-      self.price = PaymentAmount[amount, currency]
-    end
-    
-    def make_paid_price(amount, currency)
-      make_reference_price amount, currency, :add_paid_alternative_condition_price, :is_for_paid_price?
-    end
-    
-    def make_referencial_unitary_price(amount, currency)
-      make_reference_price amount, currency, :add_referencial_condition_price, :is_for_referencial_price?
-    end
-    
+   
     def build_xml(xml)
       xml['cac'].InvoiceLine do
         xml['cbc'].ID id
@@ -61,12 +60,10 @@ module SUNAT
         line_extension_amount.build_xml(xml, :LineExtensionAmount) if line_extension_amount.present?
         pricing_reference.build_xml(xml) if pricing_reference.present?
         
-        tax_totals.each do |total|
-          total.build_xml xml
-        end
-        
-        items.each do |item|
-          item.build_xml xml
+        item.build_xml(xml) unless item.nil?
+
+        tax_totals.each do |tax_total|
+          tax_total.build_xml(xml)
         end
         
         xml['cac'].Price do
@@ -74,24 +71,58 @@ module SUNAT
         end
       end
     end
-    
-    private
-    
-    def make_reference_price(amount, currency, add_condition_method, acp_checker_method)
-      self.pricing_reference ||= PriceReference.new
-      self.pricing_reference.tap do |ref|
-        if ref.alternative_condition_prices.empty?
-          ref.send(add_condition_method, amount, currency)
-        else
-          acp_to_edit = ref.alternative_condition_prices.find { |acp| acp.send(acp_checker_method) }
-          if acp_to_edit
-            acp_to_edit.price_amount = PaymentAmount[amount, currency]
-          else
-            ref.send(add_condition_method, amount, currency)
-          end
-        end
-      end
+
+    protected
+
+
+    def parse_attributes(attrs = {})
+      handle_item(attrs)
+      handle_quantity(attrs)
+      handle_total(attrs)
+      handle_list_price(attrs)
+      attrs
     end
     
+    private
+
+    def handle_item(attrs)
+      desc = attrs.delete(:description)
+      if desc
+        self.item = {
+          description: desc,
+          id: attrs.delete(:code)
+        }
+      end
+    end
+
+    def handle_quantity(attrs)
+      qty  = attrs.delete(:quantity)
+      unit = attrs.delete(:unit)
+      if qty
+        code = if unit.is_a?(Symbol) and real_code = KNOWN_UNIT_CODES[unit]
+          real_code
+        else
+          unit
+        end
+        self.invoiced_quantity = {quantity:qty, unit_code:code}
+      end
+    end
+
+    def handle_total(attrs)
+      price = attrs.delete(:total)
+      if price
+        self.line_extension_amount = price
+      end
+    end
+
+    # Essentially all this does is forward list_price to the 
+    # pricing_reference property.
+    def handle_list_price(attrs)
+      price = attrs.delete(:list_price)
+      if price
+        self.pricing_reference = price
+      end
+    end
+   
   end
 end

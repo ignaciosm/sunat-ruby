@@ -1,5 +1,5 @@
 module SUNAT
-  
+
   class AccountingParty
     include Model
     
@@ -9,21 +9,17 @@ module SUNAT
     
     validates :account_id, existence: true, presence: true, ruc_document: true
     validates :additional_account_id, existence: true, document_type_code: true
-    
-    def build_party_with_name(name)
-      self.party = Party.new.tap do |party|
-        party.name = name
-      end
-    end
-    
-    def build_party_with_legal_name(*names)
-      self.party = Party.new.tap do |party|
-        names.each do |name|
-          party.party_legal_entities << PartyLegalEntity.new.tap do |entity|
-            entity.registration_name = name
-          end
-        end
-      end
+
+    # Build a new AccountingParty. Either provide a compelte hash containing
+    # the regular structure, or provide a shortened version that will be
+    # automatically converted from the following fields:
+    #
+    #  * name - name of the company
+    #  * ruc  - Peruvian SUNAT ID
+    #  * or dni - National ID number, for exports
+    #
+    def initialize(attrs = {})
+      super(attributes_parser(attrs))
     end
     
     def build_xml(xml, tag_name)
@@ -37,6 +33,32 @@ module SUNAT
         
         party.build_xml xml
       end
+    end
+
+    protected
+
+    def attributes_parser(attrs)
+      ruc  = attrs.delete(:ruc)
+      dni  = attrs.delete(:dni)
+      name = attrs.delete(:name)
+      if name
+        if (dni || ruc)
+          # Special case! Try set the properties accordingly.
+          self.additional_account_id = dni ? Document::DNI_DOCUMENT_CODE : Document::RUC_DOCUMENT_CODE
+          self.account_id = dni || ruc
+        end
+
+        if dni
+          self.party = {name:name}
+        else
+          self.party = {
+            party_legal_entities: [{
+              registration_name: name
+            }]
+          }
+        end
+      end
+      attrs
     end
   end
 end

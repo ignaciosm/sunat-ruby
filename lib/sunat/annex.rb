@@ -135,5 +135,10 @@ module SUNAT
       '4009'  # Beneficio Hospedajes: Paquete turístico – Numero de documento identidad de huésped
     ]
 
+    CATALOG_16 = [
+      '01', # Precio unitario (incluye el IGV)
+      '02'  # Valor referencial unitario en operaciones no onerosas (gifts!)
+    ]
+
   end
 end

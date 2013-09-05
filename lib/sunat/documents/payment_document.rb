@@ -46,25 +46,8 @@ module SUNAT
           self.lines << line
         end
         
-        # refactor..meh :P It depends a lot
-        def make_accounting_customer_party(options)
-          dni = options[:dni]
-          ruc = options[:ruc]
-          name = options[:name]
-          
-          doc_code = dni ? Document::DNI_DOCUMENT_CODE : Document::RUC_DOCUMENT_CODE
-          doc_number = dni || ruc
-          build_party_method = dni ? :build_party_with_name : :build_party_with_legal_name
-          
-          self.accounting_customer_party = AccountingParty.new.tap do |p|
-            if doc_number.present?
-              p.additional_account_id = doc_code
-              p.account_id = doc_number
-            end
-            p.send(build_party_method, name)
-          end
-        end
-        
+
+
         def to_xml
           super do |xml|
             xml['cbc'].InvoiceTypeCode      invoice_type_code

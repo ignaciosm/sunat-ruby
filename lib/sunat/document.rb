@@ -9,12 +9,12 @@ module SUNAT
     RUC_DOCUMENT_CODE = "6"
     DNI_DOCUMENT_CODE = "1"
 
+    property :id,                         String # Usually: serial + correlative number
     property :issue_date,                 Date
     property :customization_id,           String
     property :accounting_supplier_party,  AccountingParty
     property :additional_monetary_totals, [MonetaryTotal]
     property :additional_properties,      [AdditionalProperty]
-    property :correlative_number,         String
 
     validates :accounting_supplier_party, existence: true
 

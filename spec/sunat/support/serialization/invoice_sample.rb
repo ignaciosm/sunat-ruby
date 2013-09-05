@@ -15,17 +15,38 @@ Invoice.new.tap do |invoice|
   invoice.ruc         = "20100113612"
   invoice.legal_name  = "K&G Laboratorios"
   
-  invoice.make_accounting_customer_party(ruc: '20382170114', name: 'CECI FARMA IMPORT S.R.L.')
+  invoice.accounting_customer_party = {ruc: '20382170114', name: 'CECI FARMA IMPORT S.R.L.'}
   
-  invoice.add_tax_total :igv, 26231, "PEN"
+  invoice.lines << {
+    :quantity => 300,
+    :price => 67800,
+    :list_price => 70000,
+    :total => 172890,
+    :item => {
+      :description => "Sample Item"
+    },
+    :tax_totals => [
+      {
+        :amount => 26231,
+        :type => :igv
+      },
+      {
+        :amount => 8745,
+        :type => :isc
+      }
+    ]
+  }
+
+  invoice.tax_totals << {
+    :amount => 26231,
+    :type => :igv
+  }
+
+  invoice.tax_totals << {
+    :amount => 8745,
+    :type => :isc
+  }
   
-  invoice.add_line do |line|
-    line.make_quantity 300, :product
-    line.make_selling_price 172890, "PEN"
-    line.make_unitary_price 67800, "PEN"
-    
-    line.make_paid_price 2000, "PEN"
-    line.add_tax_total :igv, 26361, "PEN"
-    line.add_tax_total :isc, 8745, "PEN"
-  end
+
+
 end

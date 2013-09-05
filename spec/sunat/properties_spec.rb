@@ -85,18 +85,6 @@ describe SUNAT::Properties do
       @obj.desc.should eql("test")
     end
     
-    it "should create a new property with a build property method" do
-      @model.property :aux, Aux
-      
-      @obj.should_receive(:called_in_block)
-      @obj.should respond_to(:build_aux)
-      @obj.build_aux do |aux|
-        @obj.called_in_block
-        aux.age = 18
-      end
-      @obj.aux.age.should eq(18)
-    end
-
     it "should return nil on property with no default" do
       @model.property :nickname, String
       @obj.nickname.should be_nil
